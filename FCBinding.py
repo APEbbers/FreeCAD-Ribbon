@@ -8924,7 +8924,8 @@ class ModernMenu(RibbonBar):
     
     def UpdateToolBar_Keys(self, WorkBenchName, Dict = ribbonStructure,  skipIdCheck = False):
         """
-        Update the ribbonstructure with updated toolbar names
+        Update the ribbonstructure with updated toolbar names 
+        Only when cases are changed but the names are equal
         """        
         # Activate the workbench
         Gui.activateWorkbench(WorkBenchName)
@@ -8945,7 +8946,7 @@ class ModernMenu(RibbonBar):
         if "workbenches" in Dict and WorkBenchName in Dict["workbenches"] and "toolbars" in Dict["workbenches"][WorkBenchName]:
             for ToolbarName, commands in Dict["workbenches"][WorkBenchName]["toolbars"].items():
                 # Go through the toolbars if name is not 'order' or 'enabled'
-                if ToolbarName != "order" and ToolbarName != "enabled":
+                if ToolbarName != "order":
                     # If the Toolbar in the toolbar dict is equal to the name in the ribbonstructure when set to lower case
                     # update the temporary dict with the structure of the ribbonstructure, but with the name from the toolbar dict.
                     # This updates the ribbonstructure when toolbarnames are changed with upper and/or lower cases
@@ -8965,10 +8966,7 @@ class ModernMenu(RibbonBar):
                                 tempList.append(Toolbar)
                         if item.endswith("_newPanel") or item.endswith("_custom"):
                             tempList.append(item)
-                if ToolbarName == "enabled":
-                     tempDict["workbenches"][WorkBenchName]["toolbars"][ToolbarName] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolbarName]
-        
-        
+
         # Update the customToolbar dict with the latest toolbar names as well
         if "customToolbars" in Dict and WorkBenchName in Dict["customToolbars"]:
             for customToolBar in Dict["customToolbars"][WorkBenchName].keys():
@@ -9054,9 +9052,9 @@ class ModernMenu(RibbonBar):
                             if item == "title":
                                 StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "title"], default="")
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["title"]
-                            # add the title 
+                            # get the state of the toolbar
                             if item == "Enabled":
-                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "Enabled"], default=True)
+                                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "toolbars", ToolBar, "Enabled"], endEmpty=True)
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"]
                 
             if "workbenches" in Dict and WorkBenchName in Dict["workbenches"]:
@@ -9522,11 +9520,11 @@ class EventInspector_RibbonUI_1(QObject):
             for i in range(RibbonBar.tabBar().count()):
                 workbenchName = RibbonBar.tabBar().tabData(i)
                 if "Enabled" in Dict["workbenches"][workbenchName]:
-                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabEnabled(i)
+                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
                 else:
                     # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], True)
-                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabEnabled(i)
+                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], endEmpty=True)
+                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
                 
             # Store the state of the mainwindow
             if mw.isMaximized():
