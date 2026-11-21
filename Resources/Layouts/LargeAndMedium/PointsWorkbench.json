@@ -53,7 +53,11 @@
                         }
                     },
                     "order": [
-                        "Part_Datums"
+                        "Part_Datums",
+                        "Std_Part",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
                     ]
                 },
                 "Points Tools": {

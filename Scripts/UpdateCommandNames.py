@@ -21,8 +21,7 @@
 # *************************************************************************
 
 # This script can be used to update "RibbonStructure.json" with modified command text from CommandList.json.
-# An backup will be created in the folder ../Backupss
-
+# An backup will be created in the folder ../Backups
 
 import FreeCAD as App
 import FreeCADGui as Gui

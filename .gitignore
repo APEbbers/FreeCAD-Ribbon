@@ -141,3 +141,4 @@ RibbonDataFile*.dat
 RibbonStructure.json
 RibbonStructure_default.json
 git-user-stats
+Scripts/CreateLayouts.py

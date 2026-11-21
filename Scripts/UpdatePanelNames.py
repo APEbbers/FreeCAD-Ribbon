@@ -27,7 +27,7 @@
 import json
 import os
 
-# Fill the correction list -> {workbenchname [[new toolbar, old toolbar], [new toolbar, old toolbar]]}
+# Fill the correction list -> {workbenchname: [[new toolbar, old toolbar], [new toolbar, old toolbar]]}
 CorrectionList = {
     "PartDesignWorkbench": [
         ['Part Design Helper Features', "Part Design Helper"],

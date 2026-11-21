@@ -36,7 +36,8 @@
                             "text": "",
                             "icon": "actions/TechDraw_PrintAll"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Views": {
                     "order": [
@@ -88,7 +89,8 @@
                         "TechDraw_SpreadsheetView": {
                             "size": "medium"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Stacking": {
                     "order": [
@@ -100,29 +102,19 @@
                             "text": "",
                             "icon": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Dimensions": {
                     "order": [
                         "TechDraw_AxoLengthDimension",
-                        "TechDraw_DimensionRepair",
-                        "TechDraw_CompDimensionTools",
-                        "TechDraw_Balloon"
+                        "TechDraw_DimensionRepair"
                     ],
                     "commands": {
                         "TechDraw_CompDimensionTools": {
                             "size": "large",
                             "text": "",
                             "icon": ""
-                        },
-                        "TechDraw_AxoLengthDimension": {
-                            "size": "medium"
-                        },
-                        "TechDraw_DimensionRepair": {
-                            "size": "medium"
-                        },
-                        "TechDraw_Balloon": {
-                            "size": "medium"
                         }
                     }
                 },
@@ -166,7 +158,8 @@
                             "text": "",
                             "icon": "TechDraw_ExtensionCustomizeFormat"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Centerlines": {
                     "order": [
@@ -207,21 +200,18 @@
                             "text": "",
                             "icon": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "TechDraw Extend Dimensions": {
                     "order": [
-                        "TechDraw_ExtensionIncreaseDecreaseGroup",
-                        "TechDraw_ExtensionInsertPrefixGroup"
+                        "TechDraw_ExtensionIncreaseDecreaseGroup"
                     ],
                     "commands": {
                         "TechDraw_ExtensionInsertPrefixGroup": {
                             "size": "large",
                             "text": "",
                             "icon": ""
-                        },
-                        "TechDraw_ExtensionIncreaseDecreaseGroup": {
-                            "size": "medium"
                         }
                     }
                 },
@@ -242,7 +232,9 @@
                             "text": "",
                             "icon": "actions/TechDraw_ExportPageDXF"
                         }
-                    }
+                    },
+                    "title": "Export",
+                    "Enabled": true
                 },
                 "TechDraw Decoration": {
                     "order": [
@@ -266,19 +258,21 @@
                             "text": "",
                             "icon": "actions/TechDraw_ToggleFrame"
                         }
-                    }
+                    },
+                    "Enabled": true,
+                    "title": "Hatch"
                 },
                 "TechDraw Annotation": {
                     "order": [
                         "TechDraw_LeaderLine",
+                        "TechDraw_SurfaceFinishSymbols",
+                        "TechDraw_WeldSymbol",
                         "TechDraw_RichTextAnnotation",
                         "TechDraw_CosmeticVertexGroup",
                         "TechDraw_CenterLineGroup",
                         "TechDraw_2PointCosmeticLine",
                         "TechDraw_DecorateLine",
                         "TechDraw_ShowAll",
-                        "TechDraw_WeldSymbol",
-                        "TechDraw_SurfaceFinishSymbols",
                         "TechDraw_HoleShaftFit"
                     ],
                     "commands": {
@@ -316,61 +310,21 @@
                             "text": ""
                         },
                         "TechDraw_WeldSymbol": {
-                            "size": "medium",
+                            "size": "large",
                             "text": ""
                         },
                         "TechDraw_SurfaceFinishSymbols": {
-                            "size": "medium",
+                            "size": "large",
                             "text": ""
                         },
                         "TechDraw_HoleShaftFit": {
                             "size": "medium",
                             "text": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
-                "TitleBlock Toolbar": {
-                    "order": [
-                        "Populate titleblock",
-                        "Import data from the FreeCAD source file",
-                        "Import data from titleblock"
-                    ],
-                    "commands": {
-                        "FillTitleBlock": {
-                            "size": "large",
-                            "text": "",
-                            "icon": "FillTitleBlock.svg"
-                        },
-                        "ImportFreeCAD": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": "ImportFreeCAD.svg"
-                        },
-                        "FillSpreadsheet": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": "FillSpreadsheet.svg"
-                        }
-                    }
-                },
-                "order": [
-                    "Structure",
-                    "TechDraw Pages",
-                    "TechDraw Views",
-                    "TechDraw Stacking",
-                    "Dimensions_custom",
-                    "TechDraw Centerlines",
-                    "Annotations_custom",
-                    "TechDraw File Access",
-                    "TechDraw Attributes",
-                    "TechDraw Decoration",
-                    "TechDraw Annotation",
-                    "Tools_newPanel",
-                    "TechDraw Extend Dimensions",
-                    "Dimensions_custom",
-                    "TechDraw Dimensions"
-                ],
-                "Individual views": {
+                "Individual Views": {
                     "order": [
                         "Isometric",
                         "Front",
@@ -447,7 +401,8 @@
                         "Std_Group",
                         "Std_LinkActions",
                         "Std_VarSet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -483,50 +438,131 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Dimensions_custom": {
                     "commands": {
                         "TechDraw_Balloon": {
                             "size": "medium",
-                            "text": ""
+                            "text": "",
+                            "icon": ""
                         },
                         "TechDraw_AxoLengthDimension": {
                             "size": "medium",
-                            "text": ""
+                            "text": "",
+                            "icon": ""
                         },
                         "TechDraw_DimensionRepair": {
                             "size": "medium",
-                            "text": ""
+                            "text": "",
+                            "icon": ""
                         },
                         "TechDraw_ExtensionIncreaseDecreaseGroup": {
                             "size": "medium",
                             "text": "",
-                            "icon": "",
-                            "IsExtra": true
+                            "icon": ""
                         },
                         "TechDraw_ExtensionInsertPrefixGroup": {
                             "size": "medium",
                             "text": "",
-                            "icon": "",
-                            "IsExtra": true
+                            "icon": ""
                         },
                         "TechDraw_ExtensionRemovePrefixChar": {
                             "size": "medium",
                             "text": "",
-                            "icon": "",
-                            "IsExtra": true
+                            "icon": ""
+                        },
+                        "TechDraw_CompDimensionTools": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
                         }
                     },
                     "order": [
-                        "TechDraw_Balloon",
-                        "TechDraw_AxoLengthDimension",
+                        "TechDraw_CompDimensionTools",
                         "TechDraw_DimensionRepair",
-                        "TechDraw_ExtensionIncreaseDecreaseGroup",
+                        "TechDraw_Balloon",
                         "TechDraw_ExtensionInsertPrefixGroup",
-                        "TechDraw_ExtensionRemovePrefixChar"
-                    ]
-                }
+                        "TechDraw_AxoLengthDimension",
+                        "TechDraw_ExtensionIncreaseDecreaseGroup"
+                    ],
+                    "Enabled": true
+                },
+                "Views_custom": {
+                    "commands": {
+                        "TechDraw_View": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_BrokenView": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_ActiveView": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_SectionGroup": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_DetailView": {
+                            "size": "large",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_DraftView": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_SpreadsheetView": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_ClipGroup": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        },
+                        "TechDraw_StackGroup": {
+                            "size": "medium",
+                            "text": "",
+                            "icon": ""
+                        }
+                    },
+                    "order": [
+                        "TechDraw_View",
+                        "TechDraw_DetailView",
+                        "TechDraw_SectionGroup",
+                        "TechDraw_BrokenView",
+                        "TechDraw_ActiveView",
+                        "TechDraw_DraftView",
+                        "TechDraw_SpreadsheetView",
+                        "TechDraw_ClipGroup",
+                        "TechDraw_StackGroup"
+                    ],
+                    "Enabled": true
+                },
+                "order": [
+                    "Structure",
+                    "TechDraw Pages",
+                    "TechDraw Stacking",
+                    "Views_custom",
+                    "Dimensions_custom",
+                    "TechDraw Attributes",
+                    "TechDraw Centerlines",
+                    "TechDraw Decoration",
+                    "TechDraw Annotation",
+                    "TechDraw File Access",
+                    "Tools_newPanel"
+                ]
             },
             "Enabled": true
         }
@@ -543,21 +579,17 @@
                     "TechDraw_ExtensionIncreaseDecreaseGroup": "TechDraw Extend Dimensions"
                 }
             },
-            "Annotations_custom": {
+            "Views_custom": {
                 "commands": {
-                    "TechDraw_RichTextAnnotation": "TechDraw Annotation",
-                    "TechDraw_LeaderLine": "TechDraw Annotation",
-                    "TechDraw_CosmeticVertexGroup": "TechDraw Annotation",
-                    "TechDraw_CenterLineGroup": "TechDraw Annotation",
-                    "TechDraw_2PointCosmeticLine": "TechDraw Annotation",
-                    "TechDraw_DecorateLine": "TechDraw Annotation",
-                    "TechDraw_ShowAll": "TechDraw Annotation",
-                    "TechDraw_WeldSymbol": "TechDraw Annotation",
-                    "TechDraw_SurfaceFinishSymbols": "TechDraw Annotation",
-                    "TechDraw_HoleShaftFit": "TechDraw Annotation",
-                    "TechDraw_ToggleFrame": "TechDraw Decoration",
-                    "TechDraw_Hatch": "TechDraw Decoration",
-                    "TechDraw_GeometricHatch": "TechDraw Decoration"
+                    "TechDraw_View": "TechDraw Views",
+                    "TechDraw_BrokenView": "TechDraw Views",
+                    "TechDraw_ActiveView": "TechDraw Views",
+                    "TechDraw_SectionGroup": "TechDraw Views",
+                    "TechDraw_DetailView": "TechDraw Views",
+                    "TechDraw_DraftView": "TechDraw Views",
+                    "TechDraw_SpreadsheetView": "TechDraw Views",
+                    "TechDraw_ClipGroup": "TechDraw Views",
+                    "TechDraw_StackGroup": "TechDraw Stacking"
                 }
             }
         }

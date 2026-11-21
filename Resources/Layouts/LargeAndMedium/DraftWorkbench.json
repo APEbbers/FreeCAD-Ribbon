@@ -59,6 +59,18 @@
                         "Draft_Hatch": {
                             "size": "medium",
                             "text": ""
+                        },
+                        "Draft Snap_ddb": {
+                            "size": "large",
+                            "text": "Draft Snap",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Draft_ToggleGrid": {
+                            "size": "medium",
+                            "text": "Toggle Grid",
+                            "icon": "",
+                            "IsExtra": true
                         }
                     },
                     "order": [
@@ -75,8 +87,12 @@
                         "Draft_BSpline",
                         "Draft_Point",
                         "Draft_Facebinder",
-                        "Draft_ShapeString"
-                    ]
+                        "Draft_ShapeString",
+                        "14_separator_DraftWorkbench",
+                        "Draft Snap_ddb",
+                        "Draft_ToggleGrid"
+                    ],
+                    "Enabled": true
                 },
                 "Draft Annotation": {
                     "commands": {
@@ -102,7 +118,8 @@
                         "Draft_Dimension",
                         "Draft_Label",
                         "Draft_AnnotationStyleEditor"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Draft Modification": {
                     "commands": {
@@ -111,7 +128,7 @@
                             "text": ""
                         },
                         "Draft_Rotate": {
-                            "size": "medium",
+                            "size": "large",
                             "text": ""
                         },
                         "Draft_Scale": {
@@ -139,7 +156,7 @@
                             "text": ""
                         },
                         "Draft_ArrayTools": {
-                            "size": "medium",
+                            "size": "large",
                             "text": ""
                         },
                         "Draft_Edit": {
@@ -185,37 +202,43 @@
                         "Draft_Shape2DView": {
                             "size": "medium",
                             "text": ""
+                        },
+                        "Draft_Shape2DViewTools": {
+                            "size": "medium"
                         }
                     },
                     "order": [
                         "Draft_Move",
-                        "Draft_Scale",
                         "Draft_Rotate",
+                        "Draft_Scale",
+                        "Draft_Stretch",
                         "Draft_Mirror",
                         "Draft_Offset",
                         "Draft_Trimex",
-                        "Draft_Stretch",
                         "7_separator_DraftWorkbench",
-                        "Draft_Edit",
-                        "Draft_Shape2DView",
                         "Draft_ArrayTools",
+                        "10_separator_DraftWorkbench",
+                        "Draft_Edit",
                         "Draft_Clone",
-                        "Draft_SubelementHighlight",
                         "Draft_Join",
                         "Draft_Split",
                         "Draft_Slope",
                         "Draft_WireToBSpline",
+                        "Draft_SubelementHighlight",
+                        "18_separator_DraftWorkbench",
                         "Draft_Upgrade",
                         "Draft_Downgrade",
-                        "19_separator_DraftWorkbench",
+                        "20_separator_DraftWorkbench",
                         "Draft_Draft2Sketch",
-                        "Draft_FlipDimension"
-                    ]
+                        "Draft_FlipDimension",
+                        "Draft_Shape2DViewTools"
+                    ],
+                    "Enabled": true
                 },
                 "Draft Utility": {
                     "commands": {
                         "Draft_LayerManager": {
-                            "size": "large",
+                            "size": "medium",
                             "text": ""
                         },
                         "Draft_AddNamedGroup": {
@@ -256,7 +279,8 @@
                         "Draft_AddConstruction",
                         "Draft_ToggleDisplayMode",
                         "Draft_WorkingPlaneProxy"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Draft Snap": {
                     "commands": {
@@ -342,7 +366,8 @@
                         "Draft_Snap_WorkingPlane",
                         "Draft_Snap_Dimensions",
                         "Draft_ToggleGrid"
-                    ]
+                    ],
+                    "Enabled": false
                 },
                 "Structure": {
                     "commands": {
@@ -378,7 +403,8 @@
                         "Std_Group",
                         "Std_LinkActions",
                         "Std_VarSet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -420,7 +446,8 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Views - Ribbon_newPanel": {
                     "order": [
@@ -521,7 +548,7 @@
                     }
                 },
                 "order": [
-                    "Individual views",
+                    "Individual Views",
                     "Structure",
                     "File",
                     "Edit",
@@ -536,8 +563,7 @@
                     "Draft Utility",
                     "Draft Snap"
                 ]
-            },
-            "Enabled": true
+            }
         }
     }
 }
