@@ -2,13 +2,6 @@
     "workbenches": {
         "AssemblyWorkbench": {
             "toolbars": {
-                "order": [
-                    "Structure",
-                    "Assembly",
-                    "Assembly Joints",
-                    "Patterns_newPanel",
-                    "Tools_newPanel"
-                ],
                 "Assembly": {
                     "order": [
                         "Assembly_CreateAssembly",
@@ -47,8 +40,12 @@
                         },
                         "Assembly_CreateSnapshot": {
                             "size": "small"
+                        },
+                        "Part_LinkArrays": {
+                            "size": "small"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Assembly Joints": {
                     "order": [
@@ -60,12 +57,13 @@
                         "Assembly_CreateJointParallel",
                         "Assembly_CreateJointDistance",
                         "Assembly_ToggleGrounded",
+                        "Assembly_CreateJointRigidGroup",
+                        "5_separator_AssemblyWorkbench",
                         "Assembly_CreateJointSlider",
                         "Assembly_CreateJointBall",
                         "Assembly_CreateJointRackPinion",
                         "Assembly_CreateJointScrew",
-                        "Assembly_CreateJointGearBelt",
-                        "Assembly_CreateJointRigidGroup"
+                        "Assembly_CreateJointGearBelt"
                     ],
                     "commands": {
                         "Assembly_ToggleGrounded": {
@@ -124,17 +122,19 @@
                         "Assembly_CreateJointRigidGroup": {
                             "size": "small"
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
-                "Individual views": {
+                "Individual Views": {
                     "order": [
-                        "Isometric",
-                        "Front",
-                        "Top",
-                        "Right",
-                        "Rear",
-                        "Bottom",
-                        "Left"
+                        "All",
+                        "Std_ViewIsometric",
+                        "Std_ViewFront",
+                        "Std_ViewTop",
+                        "Std_ViewRight",
+                        "Std_ViewRear",
+                        "Std_ViewBottom",
+                        "Std_ViewLeft"
                     ],
                     "commands": {
                         "Std_ViewIsometric": {
@@ -203,7 +203,8 @@
                         "Std_Group",
                         "Std_LinkActions",
                         "Std_VarSet"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -239,93 +240,102 @@
                         "Std_BoxElementSelection",
                         "Std_BoxSelection",
                         "Std_WhatsThis"
-                    ]
+                    ],
+                    "Enabled": true
                 },
-                "Individual Views": {
+                "Arrays_newPanel": {
                     "order": [
-                        "All",
-                        "Std_ViewIsometric",
-                        "Std_ViewFront",
-                        "Std_ViewTop",
-                        "Std_ViewRight",
-                        "Std_ViewRear",
-                        "Std_ViewBottom",
-                        "Std_ViewLeft"
+                        "Part_LinkArrayLinear",
+                        "Part_LinkArrayCircular",
+                        "Part_LinkArrayPolar",
+                        "Part_LinkArrayPoint",
+                        "Part_LinkArrayPath"
                     ],
                     "commands": {
-                        "Std_ViewIsometric": {
+                        "Part_LinkArrayCircular": {
                             "size": "small",
-                            "text": "",
-                            "icon": "view-axonometric"
-                        },
-                        "Std_ViewFront": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "view-front"
-                        },
-                        "Std_ViewTop": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "view-top"
-                        },
-                        "Std_ViewRight": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "view-right"
-                        },
-                        "Std_ViewRear": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "view-rear"
-                        },
-                        "Std_ViewBottom": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "view-bottom"
-                        },
-                        "Std_ViewLeft": {
-                            "size": "small",
-                            "text": "",
-                            "icon": "view-left"
-                        }
-                    }
-                },
-                "Patterns_newPanel": {
-                    "order": [
-                        "Draft_OrthoArray",
-                        "Draft_CircularArray",
-                        "Draft_Mirror",
-                        "Draft_ArrayTools"
-                    ],
-                    "commands": {
-                        "Draft_ArrayTools": {
-                            "size": "small",
-                            "text": "Array...",
+                            "text": "Circular Link Array",
                             "icon": "",
                             "IsExtra": true
                         },
-                        "Draft_OrthoArray": {
+                        "Part_LinkArrayLinear": {
                             "size": "small",
-                            "text": "Array",
+                            "text": "Linear Link Array",
                             "icon": "",
                             "IsExtra": true
                         },
-                        "Draft_CircularArray": {
+                        "Part_LinkArrayPolar": {
                             "size": "small",
-                            "text": "Circular Array",
+                            "text": "Polar Link Array",
                             "icon": "",
                             "IsExtra": true
                         },
-                        "Draft_Mirror": {
+                        "Part_LinkArrayPoint": {
                             "size": "small",
-                            "text": "Mirror",
+                            "text": "Point Link Array",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Part_LinkArrayPath": {
+                            "size": "small",
+                            "text": "Path Link Array",
                             "icon": "",
                             "IsExtra": true
                         }
+                    },
+                    "Enabled": true
+                },
+                "Assembly Tools_newPanel": {
+                    "Enabled": true,
+                    "order": [
+                        "Assembly_CreateView",
+                        "Assembly_SolveAssembly",
+                        "Assembly_CreateSimulation",
+                        "Assembly_CreateBom",
+                        "Assembly_CreateSnapshot"
+                    ],
+                    "commands": {
+                        "Assembly_CreateView": {
+                            "size": "small",
+                            "text": "Exploded View",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Assembly_CreateBom": {
+                            "size": "small",
+                            "text": "Bill of Materials",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Assembly_CreateSnapshot": {
+                            "size": "small",
+                            "text": "Snapshot",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Assembly_SolveAssembly": {
+                            "size": "small",
+                            "text": "Solve Assembly",
+                            "icon": "",
+                            "IsExtra": true
+                        },
+                        "Assembly_CreateSimulation": {
+                            "size": "small",
+                            "text": "Simulation",
+                            "icon": "",
+                            "IsExtra": true
+                        }
                     }
-                }
-            },
-            "Enabled": true
+                },
+                "order": [
+                    "Structure",
+                    "Assembly",
+                    "Assembly Joints",
+                    "Arrays_newPanel",
+                    "Assembly Tools_newPanel",
+                    "Tools_newPanel"
+                ]
+            }
         }
     }
 }

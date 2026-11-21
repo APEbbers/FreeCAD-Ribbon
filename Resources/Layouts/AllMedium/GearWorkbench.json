@@ -5,29 +5,19 @@
                 "Structure": {
                     "commands": {
                         "Std_Part": {
-                            "size": "medium",
-                            "text": "New Part",
-                            "icon": "Geofeaturegroup"
+                            "size": "medium"
                         },
                         "Part_Datums": {
-                            "size": "medium",
-                            "text": "Datums...",
-                            "icon": ""
+                            "size": "medium"
                         },
                         "Std_Group": {
-                            "size": "medium",
-                            "text": "New Group",
-                            "icon": "folder"
+                            "size": "medium"
                         },
                         "Std_LinkActions": {
-                            "size": "medium",
-                            "text": "Link Actions...",
-                            "icon": ""
+                            "size": "medium"
                         },
                         "Std_VarSet": {
-                            "size": "medium",
-                            "text": "Variable Set",
-                            "icon": "VarSet"
+                            "size": "medium"
                         }
                     },
                     "order": [
@@ -41,74 +31,46 @@
                 "Gear": {
                     "commands": {
                         "FCGear_InvoluteGear": {
-                            "size": "medium",
-                            "text": "Involute Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/involutegear.svg"
+                            "size": "medium"
                         },
                         "FCGear_InternalInvoluteGear": {
-                            "size": "medium",
-                            "text": "Internal Involute Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/internalinvolutegear.svg"
+                            "size": "medium"
                         },
                         "FCGear_InvoluteRack": {
-                            "size": "medium",
-                            "text": "Involute Rack",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/involuterack.svg"
+                            "size": "medium"
                         },
                         "FCGear_CycloidGear": {
-                            "size": "medium",
-                            "text": "Cycloid Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/cycloidgear.svg"
+                            "size": "medium"
                         },
                         "FCGear_CycloidRack": {
-                            "size": "medium",
-                            "text": "Cycloid Rack",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/cycloidrack.svg"
+                            "size": "medium"
                         },
                         "FCGear_BevelGear": {
-                            "size": "medium",
-                            "text": "Bevel Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/bevelgear.svg"
+                            "size": "medium"
                         },
                         "FCGear_CrownGear": {
-                            "size": "medium",
-                            "text": "Crown Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/crowngear.svg"
+                            "size": "medium"
                         },
                         "FCGear_WormGear": {
-                            "size": "medium",
-                            "text": "Worm Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/wormgear.svg"
+                            "size": "medium"
                         },
                         "FCGear_TimingGearT": {
-                            "size": "medium",
-                            "text": "Timing Gear T-shape",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/timinggear_t.svg"
+                            "size": "medium"
                         },
                         "FCGear_TimingGear": {
-                            "size": "medium",
-                            "text": "Timing Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/timinggear.svg"
+                            "size": "medium"
                         },
                         "FCGear_LanternGear": {
-                            "size": "medium",
-                            "text": "Lantern Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/lanterngear.svg"
+                            "size": "medium"
                         },
                         "FCGear_HypoCycloidGear": {
-                            "size": "medium",
-                            "text": "HypoCycloid Gear",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/hypocycloidgear.svg"
+                            "size": "medium"
                         },
                         "FCGear_GearConnector": {
-                            "size": "medium",
-                            "text": "Combine two gears",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/gearconnector.svg"
+                            "size": "medium"
                         },
                         "FCGear_PlanetaryGear": {
-                            "size": "medium",
-                            "text": "Planetary Gear Assembly",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/freecad.gears/freecad/gears/icons/planetarygear.svg"
+                            "size": "medium"
                         }
                     },
                     "order": [
@@ -132,34 +94,22 @@
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
-                            "size": "medium",
-                            "text": "Measure",
-                            "icon": "umf-measurement"
+                            "size": "medium"
                         },
                         "Std_UnitsCalculator": {
-                            "size": "medium",
-                            "text": "Units Converter",
-                            "icon": "accessories-calculator"
+                            "size": "medium"
                         },
                         "Std_Properties": {
-                            "size": "medium",
-                            "text": "Properties",
-                            "icon": "document-properties"
+                            "size": "medium"
                         },
                         "Std_BoxElementSelection": {
-                            "size": "medium",
-                            "text": "Box Element Selection",
-                            "icon": "edit-element-select-box"
+                            "size": "medium"
                         },
                         "Std_BoxSelection": {
-                            "size": "medium",
-                            "text": "Box Selection",
-                            "icon": "edit-select-box"
+                            "size": "medium"
                         },
                         "Std_WhatsThis": {
-                            "size": "medium",
-                            "text": "What's This?",
-                            "icon": "WhatsThis"
+                            "size": "medium"
                         }
                     },
                     "order": [
@@ -170,221 +120,6 @@
                         "Std_BoxSelection",
                         "Std_WhatsThis"
                     ]
-                },
-                "File": {
-                    "commands": {
-                        "Std_New": {
-                            "size": "medium",
-                            "text": "New Document",
-                            "icon": "document-new"
-                        },
-                        "Std_Open": {
-                            "size": "medium",
-                            "text": "Open\u2026",
-                            "icon": "document-open"
-                        },
-                        "Std_Save": {
-                            "size": "medium",
-                            "text": "Save",
-                            "icon": "document-save"
-                        }
-                    }
-                },
-                "Edit": {
-                    "commands": {
-                        "Std_Undo": {
-                            "size": "medium",
-                            "text": "Undo",
-                            "icon": "edit-undo"
-                        },
-                        "Std_Redo": {
-                            "size": "medium",
-                            "text": "Redo",
-                            "icon": "edit-redo"
-                        },
-                        "Separator": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": ""
-                        },
-                        "Std_Refresh": {
-                            "size": "medium",
-                            "text": "Recompute",
-                            "icon": "view-refresh"
-                        }
-                    }
-                },
-                "Clipboard": {
-                    "commands": {
-                        "Std_Cut": {
-                            "size": "medium",
-                            "text": "Cut",
-                            "icon": "edit-cut"
-                        },
-                        "Std_Copy": {
-                            "size": "medium",
-                            "text": "Copy",
-                            "icon": "edit-copy"
-                        },
-                        "Std_Paste": {
-                            "size": "medium",
-                            "text": "Paste",
-                            "icon": "edit-paste"
-                        }
-                    }
-                },
-                "Workbench": {
-                    "commands": {
-                        "Std_Workbench": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": ""
-                        }
-                    }
-                },
-                "Macro": {
-                    "commands": {
-                        "Std_DlgMacroRecord": {
-                            "size": "medium",
-                            "text": "Record Macro",
-                            "icon": "media-record"
-                        },
-                        "Std_DlgMacroExecute": {
-                            "size": "medium",
-                            "text": "Macros",
-                            "icon": "accessories-text-editor"
-                        },
-                        "Std_DlgMacroExecuteDirect": {
-                            "size": "medium",
-                            "text": "Execute Macro",
-                            "icon": "media-playback-start"
-                        }
-                    }
-                },
-                "View": {
-                    "commands": {
-                        "Std_ViewFitAll": {
-                            "size": "medium",
-                            "text": "Fit All",
-                            "icon": "zoom-all"
-                        },
-                        "Std_ViewFitSelection": {
-                            "size": "medium",
-                            "text": "Fit Selection",
-                            "icon": "zoom-selection"
-                        },
-                        "Std_ViewGroup": {
-                            "size": "medium",
-                            "text": "Standard Views...",
-                            "icon": "view-isometric"
-                        },
-                        "Std_AlignToSelection": {
-                            "size": "medium",
-                            "text": "Align to Selection",
-                            "icon": "align-to-selection"
-                        },
-                        "Separator": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": ""
-                        },
-                        "Std_DrawStyle": {
-                            "size": "medium",
-                            "text": "Draw Style...",
-                            "icon": "DrawStyleAsIs"
-                        },
-                        "Part_SelectFilter": {
-                            "size": "medium",
-                            "text": "Selection Filter...",
-                            "icon": "clear-selection"
-                        },
-                        "Std_Measure": {
-                            "size": "medium",
-                            "text": "Measure",
-                            "icon": "umf-measurement"
-                        },
-                        "Std_MassProperties": {
-                            "size": "medium",
-                            "text": "Mass Properties",
-                            "icon": "MassPropertiesIcon"
-                        }
-                    }
-                },
-                "Individual Views": {
-                    "commands": {
-                        "Std_ViewIsometric": {
-                            "size": "medium",
-                            "text": "&Isometric",
-                            "icon": "view-axonometric"
-                        },
-                        "Std_ViewFront": {
-                            "size": "medium",
-                            "text": "Front",
-                            "icon": "view-front"
-                        },
-                        "Std_ViewTop": {
-                            "size": "medium",
-                            "text": "Top",
-                            "icon": "view-top"
-                        },
-                        "Std_ViewRight": {
-                            "size": "medium",
-                            "text": "Right",
-                            "icon": "view-right"
-                        },
-                        "Std_ViewRear": {
-                            "size": "medium",
-                            "text": "Rear",
-                            "icon": "view-rear"
-                        },
-                        "Std_ViewBottom": {
-                            "size": "medium",
-                            "text": "Bottom",
-                            "icon": "view-bottom"
-                        },
-                        "Std_ViewLeft": {
-                            "size": "medium",
-                            "text": "Left",
-                            "icon": "view-left"
-                        }
-                    }
-                },
-                "Help": {
-                    "commands": {
-                        "Std_WhatsThis": {
-                            "size": "medium",
-                            "text": "What's This?",
-                            "icon": "WhatsThis"
-                        }
-                    }
-                },
-                "Create BOM GearWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "medium",
-                            "text": "Create BOM",
-                            "icon": "BillOfMaterialsWB.svg"
-                        }
-                    }
-                },
-                "PieMenuTB": {
-                    "commands": {
-                        "PieMenu_View": {
-                            "size": "medium",
-                            "text": "View",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
-                        },
-                        "PieMenu_PartDesign": {
-                            "size": "medium",
-                            "text": "PartDesign",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
-                        },
-                        "PieMenu_Sketcher": {
-                            "size": "medium",
-                            "text": "Sketcher",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
-                        }
-                    }
                 }
             },
             "Enabled": true

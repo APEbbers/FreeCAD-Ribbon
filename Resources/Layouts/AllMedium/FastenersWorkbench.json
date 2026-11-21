@@ -1,0 +1,300 @@
+{
+    "workbenches": {
+        "FastenersWorkbench": {
+            "toolbars": {
+                "File": {
+                    "order": [
+                        "Std_New",
+                        "Std_Open",
+                        "Std_Save"
+                    ],
+                    "commands": {
+                        "Std_New": {
+                            "size": "medium"
+                        },
+                        "Std_Open": {
+                            "size": "medium"
+                        },
+                        "Std_Save": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "Edit": {
+                    "order": [
+                        "Std_Undo",
+                        "Std_Redo",
+                        "Separator",
+                        "Std_Refresh"
+                    ],
+                    "commands": {
+                        "Std_Undo": {
+                            "size": "medium"
+                        },
+                        "Std_Redo": {
+                            "size": "medium"
+                        },
+                        "Separator": {
+                            "size": "medium"
+                        },
+                        "Std_Refresh": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "Clipboard": {
+                    "order": [
+                        "Std_Cut",
+                        "Std_Copy",
+                        "Std_Paste"
+                    ],
+                    "commands": {
+                        "Std_Cut": {
+                            "size": "medium"
+                        },
+                        "Std_Copy": {
+                            "size": "medium"
+                        },
+                        "Std_Paste": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "Workbench": {
+                    "order": [
+                        "Std_Workbench"
+                    ],
+                    "commands": {
+                        "Std_Workbench": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "Macro": {
+                    "order": [
+                        "Std_DlgMacroRecord",
+                        "Std_DlgMacroExecute",
+                        "Std_DlgMacroExecuteDirect"
+                    ],
+                    "commands": {
+                        "Std_DlgMacroRecord": {
+                            "size": "medium"
+                        },
+                        "Std_DlgMacroExecute": {
+                            "size": "medium"
+                        },
+                        "Std_DlgMacroExecuteDirect": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "Individual Views": {
+                    "order": [
+                        "Std_ViewIsometric",
+                        "Std_ViewFront",
+                        "Std_ViewTop",
+                        "Std_ViewRight",
+                        "Std_ViewRear",
+                        "Std_ViewBottom",
+                        "Std_ViewLeft"
+                    ],
+                    "commands": {
+                        "Std_ViewIsometric": {
+                            "size": "medium"
+                        },
+                        "Std_ViewFront": {
+                            "size": "medium"
+                        },
+                        "Std_ViewTop": {
+                            "size": "medium"
+                        },
+                        "Std_ViewRight": {
+                            "size": "medium"
+                        },
+                        "Std_ViewRear": {
+                            "size": "medium"
+                        },
+                        "Std_ViewBottom": {
+                            "size": "medium"
+                        },
+                        "Std_ViewLeft": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "Structure": {
+                    "order": [
+                        "Std_Part",
+                        "Part_Datums",
+                        "Std_Group",
+                        "Std_LinkActions",
+                        "Std_VarSet"
+                    ],
+                    "commands": {
+                        "Std_Part": {
+                            "size": "medium"
+                        },
+                        "Part_Datums": {
+                            "size": "medium"
+                        },
+                        "Std_Group": {
+                            "size": "medium"
+                        },
+                        "Std_LinkActions": {
+                            "size": "medium"
+                        },
+                        "Std_VarSet": {
+                            "size": "medium"
+                        }
+                    },
+                    "Enabled": true
+                },
+                "Help": {
+                    "order": [
+                        "Std_WhatsThis"
+                    ],
+                    "commands": {
+                        "Std_WhatsThis": {
+                            "size": "medium"
+                        }
+                    }
+                },
+                "FS Commands": {
+                    "order": [
+                        "Fasteners_Flip",
+                        "Fasteners_Move",
+                        "Fasteners_Simplify",
+                        "Fasteners_MatchTypeInner",
+                        "Fasteners_MatchTypeOuter",
+                        "Fasteners_BOM",
+                        "Fasteners_ScrewCalculator",
+                        "Fasteners_3dPrintSettings",
+                        "Fasteners_ChangeParameters",
+                        "Fasteners_Search"
+                    ],
+                    "commands": {
+                        "Fasteners_Flip": {
+                            "size": "medium"
+                        },
+                        "Fasteners_Move": {
+                            "size": "medium"
+                        },
+                        "Fasteners_Simplify": {
+                            "size": "medium"
+                        },
+                        "Fasteners_MatchTypeInner": {
+                            "size": "medium"
+                        },
+                        "Fasteners_MatchTypeOuter": {
+                            "size": "medium"
+                        },
+                        "Fasteners_BOM": {
+                            "size": "medium"
+                        },
+                        "Fasteners_ScrewCalculator": {
+                            "size": "medium"
+                        },
+                        "Fasteners_3dPrintSettings": {
+                            "size": "medium"
+                        },
+                        "Fasteners_ChangeParameters": {
+                            "size": "medium"
+                        },
+                        "Fasteners_Search": {
+                            "size": "medium"
+                        }
+                    },
+                    "Enabled": true
+                },
+                "FS Screws": {
+                    "order": [
+                        "Misc head",
+                        "Hex head",
+                        "Hexagon socket",
+                        "Hexalobular socket",
+                        "Nut",
+                        "ThreadedRod",
+                        "Washer",
+                        "Grub/Set screws",
+                        "T-Slot Fasteners",
+                        "Inserts",
+                        "Retaining Rings",
+                        "Pins",
+                        "7_separator_FastenersWorkbench",
+                        "Slotted",
+                        "H cross",
+                        "EJOT PT WN14xx Screws for plastic",
+                        "12_separator_FastenersWorkbench",
+                        "Thumb screws",
+                        "Ground screws",
+                        "Nails",
+                        "Bushings"
+                    ],
+                    "commands": {
+                        "Misc head": {
+                            "size": "medium"
+                        },
+                        "Separator": {
+                            "size": "medium"
+                        },
+                        "Hex head": {
+                            "size": "medium"
+                        },
+                        "Hexagon socket": {
+                            "size": "medium"
+                        },
+                        "Hexalobular socket": {
+                            "size": "medium"
+                        },
+                        "Slotted": {
+                            "size": "medium"
+                        },
+                        "H cross": {
+                            "size": "medium"
+                        },
+                        "Grub/Set screws": {
+                            "size": "medium"
+                        },
+                        "Thumb screws": {
+                            "size": "medium"
+                        },
+                        "Ground screws": {
+                            "size": "medium"
+                        },
+                        "Nut": {
+                            "size": "medium"
+                        },
+                        "T-Slot Fasteners": {
+                            "size": "medium"
+                        },
+                        "Washer": {
+                            "size": "medium"
+                        },
+                        "ThreadedRod": {
+                            "size": "medium"
+                        },
+                        "Inserts": {
+                            "size": "medium"
+                        },
+                        "Retaining Rings": {
+                            "size": "medium"
+                        },
+                        "Nails": {
+                            "size": "medium"
+                        },
+                        "Pins": {
+                            "size": "medium"
+                        },
+                        "EJOT PT WN14xx Screws for plastic": {
+                            "size": "medium"
+                        },
+                        "Bushings": {
+                            "size": "medium"
+                        }
+                    },
+                    "Enabled": true
+                }
+            }
+        }
+    }
+}

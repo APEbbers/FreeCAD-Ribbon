@@ -46,12 +46,10 @@
                             "size": "small",
                             "text": "",
                             "icon": ""
-                        },
-                        "AssemblyCut_Cut": {
-                            "size": "small"
                         }
                     },
-                    "title": "Helpers"
+                    "title": "Helpers",
+                    "Enabled": true
                 },
                 "Part Design Modeling Features": {
                     "order": [
@@ -61,9 +59,9 @@
                         "PartDesign_AdditivePipe",
                         "PartDesign_AdditiveHelix",
                         "PartDesign_CompPrimitiveAdditive",
-                        "11_separator_PartDesignWorkbench",
-                        "PartDesign_Hole",
+                        "7_separator_PartDesignWorkbench",
                         "PartDesign_Pocket",
+                        "PartDesign_Hole",
                         "PartDesign_Groove",
                         "PartDesign_SubtractiveLoft",
                         "PartDesign_SubtractivePipe",
@@ -144,7 +142,8 @@
                             "icon": "PartDesign_Boolean"
                         }
                     },
-                    "title": "Modeling"
+                    "title": "Modeling",
+                    "Enabled": true
                 },
                 "Individual views": {
                     "order": [
@@ -228,7 +227,8 @@
                             "text": "Datums...",
                             "icon": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Part Design Dress-Up Features": {
                     "order": [
@@ -263,14 +263,18 @@
                             "size": "small"
                         }
                     },
-                    "title": "Dress-Up"
+                    "title": "Dress-up",
+                    "Enabled": true
                 },
                 "Part Design Transformation Features": {
                     "order": [
                         "PartDesign_LinearPattern",
+                        "PartDesign_CircularPattern",
                         "PartDesign_PolarPattern",
                         "PartDesign_Mirrored",
-                        "PartDesign_MultiTransform"
+                        "PartDesign_MultiTransform",
+                        "PartDesign_PathPattern",
+                        "PartDesign_PointPattern"
                     ],
                     "commands": {
                         "PartDesign_Mirrored": {
@@ -296,9 +300,19 @@
                             "text": "",
                             "icon": "PartDesign_MultiTransform",
                             "textEnabled": false
+                        },
+                        "PartDesign_CircularPattern": {
+                            "size": "small"
+                        },
+                        "PartDesign_PathPattern": {
+                            "size": "small"
+                        },
+                        "PartDesign_PointPattern": {
+                            "size": "small"
                         }
                     },
-                    "title": "Patterns"
+                    "title": "Patterns",
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
@@ -343,7 +357,8 @@
                         "Std_BoxElementSelection",
                         "Std_WhatsThis",
                         "Std_BoxSelection"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Individual Views": {
                     "order": [

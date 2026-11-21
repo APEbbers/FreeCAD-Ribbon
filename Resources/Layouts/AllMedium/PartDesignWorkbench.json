@@ -14,46 +14,42 @@
                     "commands": {
                         "PartDesign_CompSketches": {
                             "size": "medium",
-                            "text": "Create sketch...",
+                            "text": "",
                             "icon": ""
                         },
                         "PartDesign_Body": {
                             "size": "medium",
-                            "text": "New Body",
+                            "text": "",
                             "icon": "PartDesign_Body"
                         },
                         "Sketcher_ValidateSketch": {
                             "size": "medium",
-                            "text": "Validate Sketch",
+                            "text": "",
                             "icon": "Sketcher_ValidateSketch"
                         },
                         "Part_CheckGeometry": {
                             "size": "medium",
-                            "text": "Check Geometry",
+                            "text": "",
                             "icon": "Part_CheckGeometry"
                         },
                         "PartDesign_SubShapeBinder": {
                             "size": "medium",
-                            "text": "Sub-Shape Binder",
+                            "text": "",
                             "icon": "PartDesign_SubShapeBinder"
                         },
                         "PartDesign_Clone": {
                             "size": "medium",
-                            "text": "Clone",
+                            "text": "",
                             "icon": "PartDesign_Clone"
                         },
                         "PartDesign_CompDatums": {
-                            "size": "large",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
-                        },
-                        "AssemblyCut_Cut": {
-                            "size": "medium",
-                            "text": "Assembly Cut",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/AssemblyCut/Resources/Icons/AssemblyCut.svg"
                         }
                     },
-                    "title": "Helpers"
+                    "title": "Helpers",
+                    "Enabled": true
                 },
                 "Part Design Modeling Features": {
                     "order": [
@@ -144,14 +140,10 @@
                             "size": "medium",
                             "text": "Boolean Operation",
                             "icon": "PartDesign_Boolean"
-                        },
-                        "Separator": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": ""
                         }
                     },
-                    "title": "Modeling"
+                    "title": "Modeling",
+                    "Enabled": true
                 },
                 "Individual views": {
                     "order": [
@@ -165,37 +157,37 @@
                     ],
                     "commands": {
                         "Std_ViewIsometric": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "view-axonometric"
                         },
                         "Std_ViewFront": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "view-front"
                         },
                         "Std_ViewTop": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "view-top"
                         },
                         "Std_ViewRight": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "view-right"
                         },
                         "Std_ViewRear": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "view-rear"
                         },
                         "Std_ViewBottom": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "view-bottom"
                         },
                         "Std_ViewLeft": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": "view-left"
                         }
@@ -235,7 +227,8 @@
                             "text": "Datums...",
                             "icon": ""
                         }
-                    }
+                    },
+                    "Enabled": true
                 },
                 "Part Design Dress-Up Features": {
                     "order": [
@@ -267,78 +260,94 @@
                             "icon": "PartDesign_Thickness"
                         },
                         "PartDesign_Defeaturing": {
-                            "size": "medium",
-                            "text": "Defeaturing",
-                            "icon": "PartDesign_Defeaturing"
+                            "size": "medium"
                         }
                     },
-                    "title": "Dress-up"
+                    "title": "Dress-up",
+                    "Enabled": true
                 },
                 "Part Design Transformation Features": {
                     "order": [
                         "PartDesign_LinearPattern",
+                        "PartDesign_CircularPattern",
                         "PartDesign_PolarPattern",
                         "PartDesign_Mirrored",
-                        "PartDesign_MultiTransform"
+                        "PartDesign_MultiTransform",
+                        "PartDesign_PathPattern",
+                        "PartDesign_PointPattern"
                     ],
                     "commands": {
                         "PartDesign_Mirrored": {
                             "size": "medium",
-                            "text": "Mirror",
-                            "icon": "PartDesign_Mirrored"
+                            "text": "",
+                            "icon": "PartDesign_Mirrored",
+                            "textEnabled": false
                         },
                         "PartDesign_LinearPattern": {
                             "size": "medium",
-                            "text": "Linear Pattern",
+                            "text": "",
                             "icon": "PartDesign_LinearPattern"
                         },
                         "PartDesign_PolarPattern": {
                             "size": "medium",
-                            "text": "Polar Pattern",
-                            "icon": "PartDesign_PolarPattern"
+                            "text": "",
+                            "icon": "PartDesign_PolarPattern",
+                            "ButtonSize_small": 24,
+                            "textEnabled": false
                         },
                         "PartDesign_MultiTransform": {
                             "size": "medium",
-                            "text": "Multi-Transform",
-                            "icon": "PartDesign_MultiTransform"
+                            "text": "",
+                            "icon": "PartDesign_MultiTransform",
+                            "textEnabled": false
+                        },
+                        "PartDesign_CircularPattern": {
+                            "size": "medium"
+                        },
+                        "PartDesign_PathPattern": {
+                            "size": "medium"
+                        },
+                        "PartDesign_PointPattern": {
+                            "size": "medium"
                         }
                     },
-                    "title": "Patterns"
+                    "title": "Patterns",
+                    "Enabled": true
                 },
                 "Tools_newPanel": {
                     "commands": {
                         "Std_Measure": {
                             "size": "medium",
-                            "text": "Measure",
+                            "text": "",
                             "icon": "umf-measurement"
                         },
                         "Std_UnitsCalculator": {
                             "size": "medium",
-                            "text": "Units Converter",
+                            "text": "",
                             "icon": "accessories-calculator"
                         },
                         "Std_Properties": {
                             "size": "medium",
-                            "text": "Properties",
+                            "text": "",
                             "icon": "document-properties"
                         },
                         "Std_BoxElementSelection": {
                             "size": "medium",
-                            "text": "Box Element Selection",
+                            "text": "",
                             "icon": "edit-element-select-box"
                         },
                         "Std_BoxSelection": {
                             "size": "medium",
-                            "text": "Box Selection",
+                            "text": "",
                             "icon": "edit-select-box"
                         },
                         "Std_WhatsThis": {
                             "size": "medium",
-                            "text": "What's This?",
+                            "text": "",
                             "icon": "WhatsThis"
                         },
                         "Part_Offset2D": {
-                            "size": ""
+                            "size": "medium"
                         }
                     },
                     "order": [
@@ -348,7 +357,8 @@
                         "Std_BoxElementSelection",
                         "Std_WhatsThis",
                         "Std_BoxSelection"
-                    ]
+                    ],
+                    "Enabled": true
                 },
                 "Individual Views": {
                     "order": [
@@ -363,38 +373,38 @@
                     "commands": {
                         "Std_ViewIsometric": {
                             "size": "medium",
-                            "text": "&Isometric",
-                            "icon": "view-axonometric"
+                            "text": "",
+                            "icon": ""
                         },
                         "Std_ViewFront": {
                             "size": "medium",
-                            "text": "Front",
-                            "icon": "view-front"
+                            "text": "",
+                            "icon": ""
                         },
                         "Std_ViewTop": {
                             "size": "medium",
-                            "text": "Top",
-                            "icon": "view-top"
+                            "text": "",
+                            "icon": ""
                         },
                         "Std_ViewRight": {
                             "size": "medium",
-                            "text": "Right",
-                            "icon": "view-right"
+                            "text": "",
+                            "icon": ""
                         },
                         "Std_ViewRear": {
                             "size": "medium",
-                            "text": "Rear",
-                            "icon": "view-rear"
+                            "text": "",
+                            "icon": ""
                         },
                         "Std_ViewBottom": {
                             "size": "medium",
-                            "text": "Bottom",
-                            "icon": "view-bottom"
+                            "text": "",
+                            "icon": ""
                         },
                         "Std_ViewLeft": {
                             "size": "medium",
-                            "text": "Left",
-                            "icon": "view-left"
+                            "text": "",
+                            "icon": ""
                         }
                     }
                 },
@@ -410,37 +420,37 @@
                     ],
                     "commands": {
                         "Std_ViewGroup": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
                         },
                         "Std_ViewFitSelection": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
                         },
                         "Std_ViewZoomOut": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
                         },
                         "Std_ViewZoomIn": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
                         },
                         "Std_ViewBoxZoom": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
                         },
                         "Std_AlignToSelection": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
                         },
                         "Part_SelectFilter": {
-                            "size": "small",
+                            "size": "medium",
                             "text": "",
                             "icon": ""
                         }
@@ -456,207 +466,7 @@
                     "Tools_newPanel",
                     "Individual Views",
                     "Views - Ribbon_newPanel"
-                ],
-                "File": {
-                    "commands": {
-                        "Std_New": {
-                            "size": "medium",
-                            "text": "New Document",
-                            "icon": "document-new"
-                        },
-                        "Std_Open": {
-                            "size": "medium",
-                            "text": "Open\u2026",
-                            "icon": "document-open"
-                        },
-                        "Std_Save": {
-                            "size": "medium",
-                            "text": "Save",
-                            "icon": "document-save"
-                        }
-                    }
-                },
-                "Edit": {
-                    "commands": {
-                        "Std_Undo": {
-                            "size": "medium",
-                            "text": "Undo",
-                            "icon": "edit-undo"
-                        },
-                        "Std_Redo": {
-                            "size": "medium",
-                            "text": "Redo",
-                            "icon": "edit-redo"
-                        },
-                        "Separator": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": ""
-                        },
-                        "Std_Refresh": {
-                            "size": "medium",
-                            "text": "Recompute",
-                            "icon": "view-refresh"
-                        }
-                    }
-                },
-                "Clipboard": {
-                    "commands": {
-                        "Std_Cut": {
-                            "size": "medium",
-                            "text": "Cut",
-                            "icon": "edit-cut"
-                        },
-                        "Std_Copy": {
-                            "size": "medium",
-                            "text": "Copy",
-                            "icon": "edit-copy"
-                        },
-                        "Std_Paste": {
-                            "size": "medium",
-                            "text": "Paste",
-                            "icon": "edit-paste"
-                        }
-                    }
-                },
-                "Workbench": {
-                    "commands": {
-                        "Std_Workbench": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": ""
-                        }
-                    }
-                },
-                "Macro": {
-                    "commands": {
-                        "Std_DlgMacroRecord": {
-                            "size": "medium",
-                            "text": "Record Macro",
-                            "icon": "media-record"
-                        },
-                        "Std_DlgMacroExecute": {
-                            "size": "medium",
-                            "text": "Macros",
-                            "icon": "accessories-text-editor"
-                        },
-                        "Std_DlgMacroExecuteDirect": {
-                            "size": "medium",
-                            "text": "Execute Macro",
-                            "icon": "media-playback-start"
-                        }
-                    }
-                },
-                "View": {
-                    "commands": {
-                        "Std_ViewFitAll": {
-                            "size": "medium",
-                            "text": "Fit All",
-                            "icon": "zoom-all"
-                        },
-                        "Std_ViewFitSelection": {
-                            "size": "medium",
-                            "text": "Fit Selection",
-                            "icon": "zoom-selection"
-                        },
-                        "Std_ViewGroup": {
-                            "size": "medium",
-                            "text": "Standard Views...",
-                            "icon": "view-isometric"
-                        },
-                        "Std_AlignToSelection": {
-                            "size": "medium",
-                            "text": "Align to Selection",
-                            "icon": "align-to-selection"
-                        },
-                        "Separator": {
-                            "size": "medium",
-                            "text": "",
-                            "icon": ""
-                        },
-                        "Std_DrawStyle": {
-                            "size": "medium",
-                            "text": "Draw Style...",
-                            "icon": "DrawStyleAsIs"
-                        },
-                        "Part_SelectFilter": {
-                            "size": "medium",
-                            "text": "Selection Filter...",
-                            "icon": "clear-selection"
-                        },
-                        "Std_Measure": {
-                            "size": "medium",
-                            "text": "Measure",
-                            "icon": "umf-measurement"
-                        },
-                        "Std_MassProperties": {
-                            "size": "medium",
-                            "text": "Mass Properties",
-                            "icon": "MassPropertiesIcon"
-                        }
-                    }
-                },
-                "Help": {
-                    "commands": {
-                        "Std_WhatsThis": {
-                            "size": "medium",
-                            "text": "What's This?",
-                            "icon": "WhatsThis"
-                        }
-                    }
-                },
-                "FusedFilamentDesign": {
-                    "commands": {
-                        "ffDesign_About": {
-                            "size": "medium",
-                            "text": "FusedFilamentDesign",
-                            "icon": "icons:ffDesign_Logo.svg"
-                        },
-                        "ffDesign_HoleWizard": {
-                            "size": "medium",
-                            "text": "Hole Wizard",
-                            "icon": "icons:ffDesign_HoleWizard.svg"
-                        },
-                        "ffDesign_ZipTieChannels": {
-                            "size": "medium",
-                            "text": "Add zip tie channels",
-                            "icon": "icons:ffDesign_ZipTieChannels.svg"
-                        },
-                        "ffDesign_AutoFillet": {
-                            "size": "medium",
-                            "text": "Add fillets to all vertical edges",
-                            "icon": "icons:ffDesign_AutoFillet.svg"
-                        }
-                    }
-                },
-                "Create BOM PartDesignWorkbench": {
-                    "commands": {
-                        "CreateBOM_Overall": {
-                            "size": "medium",
-                            "text": "Create BOM",
-                            "icon": "BillOfMaterialsWB.svg"
-                        }
-                    }
-                },
-                "PieMenuTB": {
-                    "commands": {
-                        "PieMenu_View": {
-                            "size": "medium",
-                            "text": "View",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
-                        },
-                        "PieMenu_PartDesign": {
-                            "size": "medium",
-                            "text": "PartDesign",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
-                        },
-                        "PieMenu_Sketcher": {
-                            "size": "medium",
-                            "text": "Sketcher",
-                            "icon": "/home/paul/.local/share/FreeCAD/v26-3/Mod/PieMenu/Resources/icons/PieMenu_Logo.svg"
-                        }
-                    }
-                }
+                ]
             },
             "Enabled": true
         }

@@ -13,6 +13,7 @@
                 "Robot": {
                     "order": [
                         "Robot_Create",
+                        "1_separator_RobotWorkbench",
                         "Robot_CreateTrajectory",
                         "Robot_InsertWaypoint",
                         "Robot_InsertWaypointPreselect",
