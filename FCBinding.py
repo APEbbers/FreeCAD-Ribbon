@@ -1327,6 +1327,14 @@ class ModernMenu(RibbonBar):
         mw.moveEvent = lambda e: self.mw_moveEvent(e)
         # ------------------------------------------------------------------------------------------------------------------     
         
+        # Create a tabgroup named 'all', if it doesn't exist
+        # Create an entry in the dict if there isn't one
+        Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["tabGroups", "All"])
+        WorkbenchList = []
+        for workbenchName in Gui.listWorkbenches():
+            WorkbenchList.append(workbenchName)
+        self.ribbonStructure["tabGroups"]["All"] = WorkbenchList
+        
         # Set the toolbars and panels as stored. ---------------------------------------------------------------------------
         # This has to be done before any styling is done. Otherwise the tooltip text for taps is white.
         #   
@@ -1632,7 +1640,7 @@ class ModernMenu(RibbonBar):
                 action = self.contextMenu.exec_(event.globalPos())
 
                 # Disconnect the widgetActions
-                self.AddToTabGroupAct.currentIndexChanged.disconnect()                
+                self.AddToTabGroupAct.combobox.currentIndexChanged.disconnect()                
                 self.AddToTabGroupAct.combobox.activated.disconnect()  
                 self.RemoveFromTabGroupAct.clicked.disconnect()     
                 return
@@ -1846,10 +1854,15 @@ class ModernMenu(RibbonBar):
                 # Add a menu to select tabs to be shown
                 menu = StayOpenMenu(self.contextMenu)
                 menu.setObjectName("TabsMenu")
+                GroupName: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox").currentText()                
                 for i in range(self.tabBar().count()):
-                    WorkbenchName = self.tabBar().tabData(i) 
-                    if WorkbenchName != "NoneWorkbench":
+                    WorkbenchName = self.tabBar().tabData(i)
+                    if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:
+                        if WorkbenchName != "NoneWorkbench" and WorkbenchName in self.ribbonStructure["tabGroups"][GroupName]:
+                            menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
+                    if "tabGroups" not in self.ribbonStructure and WorkbenchName != "NoneWorkbench":
                         menu.addAction(self.createAction_Tabs(WorkbenchName, menu))
+                        
                 SetTabAct = self.contextMenu.addMenu(menu)
                 SetTabAct.setText(translate("FreeCAD Ribbon", "Show/hide tabs..."))
                 
@@ -3621,7 +3634,7 @@ class ModernMenu(RibbonBar):
     def on_AddToGroup_Clicked(self, tabIndex, GroupName = ""):
         # Get the workbench name and the panel name
         workbenchName = self.tabBar().tabData(tabIndex)
-        
+
         if GroupName == "" or GroupName is None:
             return
         
@@ -3680,44 +3693,7 @@ class ModernMenu(RibbonBar):
                 self.on_Group_Changed(GroupName)                
         return
     
-    def on_Group_Changed(self, GroupName):      
-        # If the groupName is "All", show all tabs
-        if GroupName == translate("FreeCAD Ribbon", "All"):            
-            for i in range(self.tabBar().count()):
-                workbenchName = self.tabBar().tabData(i)
-                
-                # Make sure to set the tab visible
-                if ("workbenches" in self.ribbonStructure and workbenchName in self.ribbonStructure["workbenches"]
-                    and "Enabled" in self.ribbonStructure["workbenches"][workbenchName]):
-                    if self.ribbonStructure["workbenches"][workbenchName]["Enabled"] is True:
-                        # Make sure to set the tab visible
-                        self.tabBar().setTabEnabled(i, True)
-                        self.tabBar().setTabVisible(i, True)  
-                    else:
-                        # Make sure to set the tab hidden
-                        self.tabBar().setTabEnabled(i, False)
-                        self.tabBar().setTabVisible(i, False)
-                # If enabled is not present, set the tab always visible
-                else:
-                    # Make sure to set the tab visible
-                    self.tabBar().setTabVisible(i, True) 
-                    # Update the dict
-                    StandardFunctions.add_keys_nested_dict(self.ribbonStructure, ["workbenches", workbenchName, "Enabled"], default=True)
-                    self.ribbonStructure["workbenches"][workbenchName]["Enabled"] = True
-                self.tabBar().setTabButton(i, QTabBar.ButtonPosition.RightSide, None) 
-            
-            # Disable the delete button and set the icon
-            self.DeleteButton.setDisabled(True)
-            
-            # Disable the remove group button in the context menu
-            try:
-                self.RemoveFromTabGroupAct.setEnabled(False)
-            except Exception:
-                pass
-            
-            self.onWbActivated()
-            return
-          
+    def on_Group_Changed(self, GroupName):                
         # Check if the group is in the ribbonStructure
         if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:  # noqa: SIM102
             if GroupName in self.ribbonStructure["tabGroups"]:                
@@ -3789,28 +3765,7 @@ class ModernMenu(RibbonBar):
                 DeleteButton.hide()
                 return
     
-    def returnGroupControls(self):
-        result = []
-        # Show the comboBox and delete button for the tabgroups
-        # DeleteButtonOff = False
-        for action in QToolBar.actions(self.rightToolBar()):    
-            if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
-                if action.defaultWidget().objectName() == "GroupBox" :
-                    # action.setVisible(True)                
-                    # if action.defaultWidget().currentText() == translate("FreeCAD Ribbon", "All"):
-                    #     DeleteButtonOff = True
-                    result.append(action.defaultWidget())
-        for action in QToolBar.actions(self.rightToolBar()):
-           if action is not None and type(action) == QWidgetAction and action.defaultWidget() is not None:  # noqa: SIM102
-                if action.defaultWidget().objectName() == "DeleteGroupButton":
-                    # action.setVisible(True)
-                    # if DeleteButtonOff is True:
-                    #     action.defaultWidget().setDisabled(True)
-                    result.append(action.defaultWidget())
-        
-        return result
-    
-    # Function to create an action for the panel menu
+    # Function to create an action for the tabs
     def createAction_Tabs(self, WorkbenchName, parent, Dict = ribbonStructure):
         Workbench = Gui.getWorkbench(WorkbenchName)
         workbenchText = Workbench.MenuText
@@ -3824,7 +3779,7 @@ class ModernMenu(RibbonBar):
         # Set the checkstate
         for i in range(self.tabBar().count()):
             tabData = self.tabBar().tabData(i)   
-            # Set the checkbox enabled
+            # Set the checkbox enabled based on the entry in workbenches
             if "workbenches" in Dict and tabData in Dict["workbenches"] and tabData == WorkbenchName:  # noqa: SIM102
                 # If enabled is present, set the checkbox accordingly
                 if "Enabled" in Dict["workbenches"][tabData]:  # noqa: SIM102
@@ -3872,6 +3827,13 @@ class ModernMenu(RibbonBar):
                     if not self.CustomizeEnabled:
                         # Make sure to set the tab visible
                         self.tabBar().setTabVisible(i, True)
+                        
+                GroupName: QComboBox = self._titleWidget.findChild(QComboBox, "GroupBox").currentText()
+                if "tabGroups" in self.ribbonStructure and GroupName in self.ribbonStructure["tabGroups"]:
+                    if self.tabBar().isTabVisible(i) is False:
+                        self.ribbonStructure["tabGroups"][GroupName].remove(workbenchName)
+                    if self.tabBar().isTabVisible(i) and workbenchName not in self.ribbonStructure["tabGroups"][GroupName]:
+                        self.ribbonStructure["tabGroups"][GroupName].append(workbenchName)
                 
                 if not self.CustomizeEnabled:        
                     # Writing to ribbonStructure.json
@@ -5160,7 +5122,9 @@ class ModernMenu(RibbonBar):
         self.ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(self.ComboBox.currentText( )))
         if "tabGroups" in self.ribbonStructure:
             for group in self.ribbonStructure["tabGroups"].keys():
-                self.ComboBox.addItem(group)    
+                index = self.ComboBox.findText(group)
+                if index == -1:
+                    self.ComboBox.addItem(group)    
         # Create a delete button
         self.DeleteButton = QToolButton(self.rightToolBar())
         self.DeleteButton.setObjectName("DeleteGroupButton")
@@ -9516,16 +9480,26 @@ class EventInspector_RibbonUI_1(QObject):
                 if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
                     Dict["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top", tabifiedList]
                     
-            # Store the state of the tabs
-            for i in range(RibbonBar.tabBar().count()):
-                workbenchName = RibbonBar.tabBar().tabData(i)
-                if "Enabled" in Dict["workbenches"][workbenchName]:
-                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
-                else:
-                    # Add the command if they don't exist
-                    Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], endEmpty=True)
-                    Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
-                
+            # # Store the state of the tabs
+            # for i in range(RibbonBar.tabBar().count()):
+            #     workbenchName = RibbonBar.tabBar().tabData(i)
+            #     if "Enabled" in Dict["workbenches"][workbenchName]:
+            #         Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
+            #     else:
+            #         # Add the command if they don't exist
+            #         Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], endEmpty=True)
+            #         Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
+            
+            # # If the tabs part of a group, set them visible
+            # if "tabGroups" in Dict:
+            #     for group in Dict["tabGroups"]:
+            #         List = Dict["tabGroups"][group]
+            #         for workbenchName in Gui.listWorkbenches():
+            #             if workbenchName in List:
+            #                 Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], endEmpty=True)
+            #                 Dict["workbenches"][workbenchName]["Enabled"] = True
+            #                 print(workbenchName)
+                                                    
             # Store the state of the mainwindow
             if mw.isMaximized():
                 Parameters_Ribbon.Settings.SetStringSetting("MainWindow", "Maximized")
