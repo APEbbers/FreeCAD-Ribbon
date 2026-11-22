@@ -121,6 +121,7 @@ DefaultSettings = {
     "RibbonHeightOffset": int(0),
     "RibbonMinimumHeight": int(16),
     "ButtonSpacing": int(3),
+    "CurrentTabGroup": "All",
 }
 
 class Settings:
@@ -718,6 +719,11 @@ class Parameters:
         BETA_FUNCTIONS_ENABLED = bool(DefaultSettings["BetaFunctions"])
         Settings.SetBoolSetting("BetaFunctions", BETA_FUNCTIONS_ENABLED)
     BETA_FUNCTIONS_ENABLED = Settings.GetBoolSetting("BetaFunctions")
+    
+    if Settings.GetStringSetting("CurrentTabGroup") == "":
+        CURRENT_TABGROUP = str(DefaultSettings["CurrentTabGroup"])
+        Settings.SetStringSetting("CurrentTabGroup", CURRENT_TABGROUP)
+    CURRENT_TABGROUP = Settings.GetStringSetting("CurrentTabGroup")
     # endregion
 
     # region - Advanced size settings ------------------------------------------------------------------------------------------------

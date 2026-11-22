@@ -27,7 +27,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -59,7 +59,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -108,7 +108,7 @@ from PySide.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1328,12 +1328,16 @@ class ModernMenu(RibbonBar):
         # ------------------------------------------------------------------------------------------------------------------     
         
         # Create a tabgroup named 'all', if it doesn't exist
+        #
         # Create an entry in the dict if there isn't one
         Standard_Functions_Ribbon.add_keys_nested_dict(self.ribbonStructure, ["tabGroups", "All"])
         WorkbenchList = []
         for workbenchName in Gui.listWorkbenches():
             WorkbenchList.append(workbenchName)
         self.ribbonStructure["tabGroups"]["All"] = WorkbenchList
+        # Set the last used tabGroup active
+        self._titleWidget.findChild(QComboBox, "GroupBox").setCurrentText(Parameters.CURRENT_TABGROUP)
+        self.on_Group_Changed(Parameters.CURRENT_TABGROUP)
         
         # Set the toolbars and panels as stored. ---------------------------------------------------------------------------
         # This has to be done before any styling is done. Otherwise the tooltip text for taps is white.
