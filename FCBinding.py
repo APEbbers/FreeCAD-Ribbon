@@ -212,7 +212,10 @@ class ModernMenu(RibbonBar):
     # region - class parameters
     # Add workbenches that need to be loaded first or early here
     WBtoLoadFirst = ["BillOfMaterialsWB"]
-
+    
+    # Add panels that needs to be excluded. Like the "NxtToolbarDropStrip" panel
+    ExcludedPanels = ["NxtToolbarDropStrip"]
+    
     # The datafile version is set in LoadDesign.py
     DataFileVersion = CacheFunctions.DataFileVersion
     
@@ -1403,8 +1406,9 @@ class ModernMenu(RibbonBar):
         menu = StayOpenMenu(mw)
         # Add the dockWidgets
         for dockWidget in mw.findChildren(QDockWidget):
-            Action_1 = self.createAction_DockWidget(dockWidget.objectName(), menu)
-            menu.addAction(Action_1)
+            if dockWidget.objectName() not in self.ExcludedPanels:
+                Action_1 = self.createAction_DockWidget(dockWidget.objectName(), menu)
+                menu.addAction(Action_1)
         # Add a separator
         menu.addSeparator()
         # Add the toolbar actions
@@ -1890,7 +1894,8 @@ class ModernMenu(RibbonBar):
                 # Store the panel names
                 panel_Names = []
                 for dockWidget in  mw.findChildren(QDockWidget):
-                    panel_Names.append(dockWidget.objectName())
+                    if dockWidget.objectName() not in self.ExcludedPanels:
+                        panel_Names.append(dockWidget.objectName())
                 menu = StayOpenMenu(mw)
                 for Panel_Name in panel_Names:
                     Action = self.createAction_DockWidget(Panel_Name, menu)
@@ -5448,8 +5453,9 @@ class ModernMenu(RibbonBar):
         workBench = Gui.activeWorkbench()
         # Store the panel names
         panel_Names = []
-        for dockWidget in  mw.findChildren(QDockWidget):
-            panel_Names.append(dockWidget.objectName())
+        for dockWidget in mw.findChildren(QDockWidget):
+            if dockWidget.objectName() not in self.ExcludedPanels:
+                panel_Names.append(dockWidget.objectName())
         # Store the toolbar names
         Toolbar_Names = workBench.listToolbars()  
             
