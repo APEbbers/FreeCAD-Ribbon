@@ -27,7 +27,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide6.QtGui import (
+from PySide.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -59,7 +59,7 @@ from PySide6.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide6.QtWidgets import (
+from PySide.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -108,7 +108,7 @@ from PySide6.QtWidgets import (
     QStyleOptionComplex,
     
 )
-from PySide6.QtCore import (
+from PySide.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -3727,6 +3727,9 @@ class ModernMenu(RibbonBar):
                 if self.CustomizeEnabled:
                     # DeleteButton: QToolButton = self._titleWidget.findChild(QToolButton, "DeleteGroupButton")
                     self.DeleteButton.setEnabled(True)
+                    
+                # Update the parameter
+                Parameters_Ribbon.Settings.SetStringSetting("CurrentTabGroup", GroupName)
                 
                 # enable the remove group button in the context menu
                 try:
