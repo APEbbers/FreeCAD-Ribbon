@@ -3790,7 +3790,8 @@ class ModernMenu(RibbonBar):
             if "workbenches" in Dict and tabData in Dict["workbenches"] and tabData == WorkbenchName:  # noqa: SIM102
                 # If enabled is present, set the checkbox accordingly
                 if "Enabled" in Dict["workbenches"][tabData]:  # noqa: SIM102
-                    Action.setChecked(Dict["workbenches"][tabData]["Enabled"])
+                    if type(Dict["workbenches"][tabData]["Enabled"]) is bool:
+                        Action.setChecked(Dict["workbenches"][tabData]["Enabled"])
                 # If enabled is not present, set the checkbox checked by default
                 if "Enabled" not in Dict["workbenches"][tabData]:  # noqa: SIM102
                     # Add the command if they don't exist
@@ -9029,9 +9030,11 @@ class ModernMenu(RibbonBar):
                                 workbenchDict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"] = Dict["workbenches"][WorkBenchName]["toolbars"][ToolBar]["Enabled"]
                 
             if "workbenches" in Dict and WorkBenchName in Dict["workbenches"]:
-                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "Enabled"])
+                StandardFunctions.add_keys_nested_dict(workbenchDict, ["workbenches", WorkBenchName, "Enabled"], endEmpty=True)
                 if "Enabled" in Dict["workbenches"][WorkBenchName]:
                     workbenchDict["workbenches"][WorkBenchName]["Enabled"] = Dict["workbenches"][WorkBenchName]["Enabled"]
+                else:
+                    workbenchDict["workbenches"][WorkBenchName]["Enabled"] = True
                 
         # Check if there are workbenches and toolbars in the ribbon structure
         if "workbenches" in Dict and WorkBenchName == "":
@@ -9486,27 +9489,7 @@ class EventInspector_RibbonUI_1(QObject):
                     Dict["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Bottom", tabifiedList]
                 if dockWidget_Area == Qt.DockWidgetArea.TopDockWidgetArea:
                     Dict["PanelStates"][dockWidget_Name] = [dockWidget.isVisible(), "Top", tabifiedList]
-                    
-            # # Store the state of the tabs
-            # for i in range(RibbonBar.tabBar().count()):
-            #     workbenchName = RibbonBar.tabBar().tabData(i)
-            #     if "Enabled" in Dict["workbenches"][workbenchName]:
-            #         Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
-            #     else:
-            #         # Add the command if they don't exist
-            #         Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], endEmpty=True)
-            #         Dict["workbenches"][workbenchName]["Enabled"] = RibbonBar.tabBar().isTabVisible(i)
-            
-            # # If the tabs part of a group, set them visible
-            # if "tabGroups" in Dict:
-            #     for group in Dict["tabGroups"]:
-            #         List = Dict["tabGroups"][group]
-            #         for workbenchName in Gui.listWorkbenches():
-            #             if workbenchName in List:
-            #                 Standard_Functions_Ribbon.add_keys_nested_dict(Dict, ["workbenches", workbenchName, "Enabled"], endEmpty=True)
-            #                 Dict["workbenches"][workbenchName]["Enabled"] = True
-            #                 print(workbenchName)
-                                                    
+
             # Store the state of the mainwindow
             if mw.isMaximized():
                 Parameters_Ribbon.Settings.SetStringSetting("MainWindow", "Maximized")
