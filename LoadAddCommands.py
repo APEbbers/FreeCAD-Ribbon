@@ -2048,7 +2048,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                 if MenuNameTranslated != "":
                     if (
                         SearchbarText != ""
-                        and MenuNameTranslated.lower().startswith(SearchbarText)
+                        # and MenuNameTranslated.lower().startswith(SearchbarText)
+                        and SearchbarText in MenuNameTranslated.lower()
                     ) or SearchbarText == "":                    
                         if CommandName not in ShadowList:
                             try:

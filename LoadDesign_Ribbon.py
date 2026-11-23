@@ -5217,7 +5217,7 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
                 if MenuNameTranslated != "":            
                     if (
                         SearchbarText != ""
-                        and MenuNameTranslated.lower().startswith(SearchbarText)
+                        and SearchbarText in MenuNameTranslated.lower()
                     ) or SearchbarText == "":       
                         if (
                             ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole)
