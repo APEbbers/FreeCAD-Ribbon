@@ -39,6 +39,7 @@ from PySide.QtWidgets import (
     QRadioButton,
     QLabel,
     QProgressBar,
+    QWidgetAction,
 )
 from PySide.QtCore import Qt, SIGNAL, Signal, QObject, QThread, QSize, QEvent
 import sys
@@ -238,10 +239,10 @@ def CreateCache(RestartFreeCAD=False):
                    
                 if WorkBench[0] in ribbonStructure["customToolbars"]:
                     for customToolBar in ribbonStructure["customToolbars"][WorkBench[0]].keys():
-                        for command, parent in ribbonStructure["customToolbars"][WorkBench[0]][customToolBar]["commands"].items():
+                        for CommandName, parent in ribbonStructure["customToolbars"][WorkBench[0]][customToolBar]["commands"].items():
                             if parent.lower() == Toolbar.lower():
-                                StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBench[0], customToolBar, "commands", command])
-                                tempDict["customToolbars"][WorkBench[0]][customToolBar]["commands"][command] = Toolbar
+                                StandardFunctions.add_keys_nested_dict(tempDict, ["customToolbars", WorkBench[0], customToolBar, "commands", CommandName])
+                                tempDict["customToolbars"][WorkBench[0]][customToolBar]["commands"][CommandName] = Toolbar
                                 
             if "workbenches" in tempDict and WorkBench[0] in tempDict["workbenches"]:
                 ribbonStructure["workbenches"][WorkBench[0]] = tempDict["workbenches"][WorkBench[0]]
@@ -331,10 +332,9 @@ def CreateCache(RestartFreeCAD=False):
     shadowList = []
     for CommandName in CommandNames:
         # get the command with this name
-        command = Gui.Command.get(CommandName[0])
         ChildCommands = returnDropDownCommands(CommandName[0])
         WorkBenchName = CommandName[1]
-        if command is not None and WorkBenchName != "":
+        if CommandName is not None and WorkBenchName != "":
             # get the icon for this command
             if CommandInfoCorrections(CommandName[0])["pixmap"] != "":
                 IconName = CommandInfoCorrections(CommandName[0])["pixmap"]
@@ -392,7 +392,7 @@ def CreateCache(RestartFreeCAD=False):
                 WorkBenchName = WorkBench[0]
                 for CustomCommand in Toolbar[2]:
                     if CustomCommand not in shadowList:
-                        command = Gui.Command.get(CustomCommand)
+                        CommandName = Gui.Command.get(CustomCommand)
                         if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
                             IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
                         else:
@@ -418,7 +418,7 @@ def CreateCache(RestartFreeCAD=False):
     for Toolbar in Toolbars:
         for CustomCommand in Toolbar[2]:
             if CustomCommand not in shadowList:
-                command = Gui.Command.get(CustomCommand)
+                CommandName = Gui.Command.get(CustomCommand)
                 if CommandInfoCorrections(CustomCommand)["pixmap"] != "":
                     IconName = CommandInfoCorrections(CustomCommand)["pixmap"]
                 else:
@@ -448,7 +448,6 @@ def CreateCache(RestartFreeCAD=False):
         ]
         for CommandName in ListCommands:
             if CommandName not in shadowList:
-                command = Gui.Command.get(CommandName)
                 if CommandInfoCorrections(CommandName)["pixmap"] != "":
                     IconName = CommandInfoCorrections(CommandName)["pixmap"]
                 else:
@@ -463,6 +462,37 @@ def CreateCache(RestartFreeCAD=False):
                     [CommandName, IconName, MenuName, "Standard", MenuNameTranslated]
                 )
                 shadowList.append(CommandName)
+    # Add any command from QToolbars that are not present yet
+    buttons = mw.findChildren(QToolButton)
+    CommandName = ""
+    for button in buttons:
+        if button.defaultAction() is not None:
+            CommandName = button.defaultAction().data()
+        else:
+            try:
+                CommandName = button.actions()[0].data()
+            except Exception:
+                try:
+                    CommandName = button.actions().data()
+                except Exception:
+                    pass
+
+                if CommandName != "" and CommandName not in shadowList:
+                    if CommandInfoCorrections(CommandName)["pixmap"] != "":
+                        IconName = CommandInfoCorrections(CommandName)["pixmap"]
+                    else:
+                        IconName = ""
+                    MenuName = CommandInfoCorrections(CommandName)["menuText"].replace(
+                        "&", ""
+                    )
+                    MenuNameTranslated = CommandInfoCorrections(CommandName)[
+                        "ActionText"
+                    ].replace("&", "")
+                    List_Commands.append(
+                        [CommandName, IconName, MenuName, "Standard", MenuNameTranslated]
+                    )
+                    shadowList.append(CommandName)
+                    
 
     # # re-activate the workbench that was stored.
     # Gui.activateWorkbench(ActiveWB)
