@@ -726,6 +726,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         ShadowList = []  # List to add the commands and prevent duplicates
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
+            if CommandName == None:
+                continue
             MenuNameTranslated = CommandItem[2].replace("&", "")  # Not translated
             if len(CommandItem) == 5:
                 MenuNameTranslated = CommandItem[4].replace("&", "")  # Translated
@@ -1662,7 +1664,7 @@ class LoadDialog(AddCommands_ui.Ui_Form):
                         shadowList.append(item[0])
                         # Get the icon. If the icon is not empty, add it to a button and at that butten to the QTableWidget
                         icon = self.ReturnCommandIcon(item[0])     
-                        if not icon.isNull() and icon is not None and icon.pixmap(64,64).toImage().bytesPerLine() >= 256:
+                        if icon is not None and not icon.isNull() and icon.pixmap(64,64).toImage().bytesPerLine() >= 256:
                             button = QToolButton()
                             button.setIcon(icon)
                             button.setToolTip(item[0])
@@ -2025,6 +2027,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
                 CommandName = ToolbarCommand[0]
+                if CommandName is None:
+                    continue
+                
                 WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
                 if len(ToolbarCommand) == 5:
@@ -2192,6 +2197,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
                 CommandName = ToolbarCommand[0]
+                if CommandName is None:
+                    continue
+                                
                 WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not transleted!
                 if len(ToolbarCommand) == 5:
@@ -2433,6 +2441,9 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         """
         RibbonBar: FCBinding.ModernMenu = mw.findChild(FCBinding.ModernMenu, "Ribbon") 
         
+        if CommandName is None or CommandName == "":
+            return None
+        
         # Define an empty icon
         Icon = QIcon()
         if os.path.exists(CommandName):
@@ -2440,6 +2451,8 @@ class LoadDialog(AddCommands_ui.Ui_Form):
         if Icon is None or (Icon is not None and Icon.isNull()): 
             # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
             for item in self.List_CommandIcons:
+                if item[0] is None:
+                    continue
                 if CommandName in item[0]:
                     Icon = item[1]
                     return Icon

@@ -2316,6 +2316,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
             for CommandItem in self.List_Commands:
                 if CommandItem[0] == ListWidgetItem.data(Qt.ItemDataRole.UserRole):
                     CommandName = CommandItem[0]
+                    if CommandName is None:
+                        continue
+                
                     WorkBenchName = CommandItem[3]
                     IsInlist = False
                     for item in DropDownButton:
@@ -3764,6 +3767,9 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Add the commands
         for CommandItem in self.List_Commands:
             CommandName = CommandItem[0]
+            if CommandName is None:
+                    continue
+                
             MenuNameTranslated = CommandItem[2].replace("&", "")  # Not translated
             if len(CommandItem) == 5:
                 MenuNameTranslated = CommandItem[4].replace("&", "")  # Translated
@@ -4882,11 +4888,14 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         Returns:
             QIcon: the command icon.
         """
+        if CommandName is None or CommandName == "":
+            return None
+        
         # Define an empty icon
         Icon = QIcon()
         # Try to get the icon from the icon list first. This list is created on load and is the fasted to read
         for item in self.List_CommandIcons:
-            if CommandName in item[0]:
+            if item[0] is not None and CommandName in item[0]:
                 Icon = item[1]
                 return Icon
             if (str(CommandName).endswith("_ddb") and "dropdownButtons" in self.Dict_RibbonCommandPanel):
@@ -5032,7 +5041,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) != "All")  or SearchbarText != "":
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
-                CommandName = ToolbarCommand[0]            
+                CommandName = ToolbarCommand[0]
+                if CommandName is None:
+                    continue
+                           
                 WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not translated
                 if len(ToolbarCommand) == 5:
@@ -5193,7 +5205,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         if (ListWidget_WorkBenches.currentData(Qt.ItemDataRole.UserRole) != "All"):
             ShadowList = []  # List to add the commands and prevent duplicates
             for ToolbarCommand in self.List_Commands:
-                CommandName = ToolbarCommand[0]            
+                CommandName = ToolbarCommand[0]
+                if CommandName is None:
+                    continue
+                          
                 WorkBenchName = ToolbarCommand[3]
                 MenuNameTranslated = ToolbarCommand[2].replace("&", "")  # Not transleted!
                 if len(ToolbarCommand) == 5:
