@@ -20,8 +20,10 @@
 # *                                                                       *
 # *************************************************************************
 
+from contextlib import contextmanager
+
 from PySide.QtGui import QIcon
-from PySide.QtCore import QSize, QEventLoop, Qt
+from PySide.QtCore import QSize, QEventLoop, Qt, QTimer
 from PySide.QtWidgets import QApplication
 
 import FreeCAD as App
@@ -34,25 +36,46 @@ translate = App.Qt.translate
 
 mw = Gui.getMainWindow()
 
+@contextmanager
+def contextManager():
+    QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+    QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+    
+    try:
+        yield
+    finally:
+        while QApplication.overrideCursor() is not None:
+            QApplication.restoreOverrideCursor()
+    return
+    
 
 class QScopedCursorOverride:
     def __enter__(self):
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        QTimer.singleShot(0, self.onTimeout_Start)
         return
         
     def __exit__(self, exception_type, exception_value, traceback):
+        QTimer.singleShot(0, self.onTimeout_End)
+        return
+    
+    def onTimeout_Start(self):
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        return
+    
+    def onTimeout_End(self):
         while QApplication.overrideCursor() is not None:
             QApplication.restoreOverrideCursor()
         return
 
-def Mbox(
+def Mbox(    
     text,
     title="",
     style=0,
     IconType="Information",
     default="",
     stringList=[],
+    parent = None,
 ):
     """
     Message Styles:\n
@@ -67,6 +90,9 @@ def Mbox(
     from PySide.QtWidgets import QMessageBox, QInputDialog
     from PySide.QtCore import Qt
     from PySide import QtWidgets
+    
+    while QApplication.overrideCursor() is not None:
+        QApplication.restoreOverrideCursor()
 
     Icon = QMessageBox.Icon.Information
     if IconType == "NoIcon":
@@ -80,13 +106,15 @@ def Mbox(
 
     if style == 0:
         # Set the messagebox
-        msgBox = QMessageBox()
+        msgBox = QMessageBox(parent=parent)
         msgBox.setIcon(Icon)
         msgBox.setText(text)
         msgBox.setWindowTitle(title)
-
+        
         reply = msgBox.exec()
         if reply == QMessageBox.StandardButton.Ok:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "ok"
     if style == 1:
         # Set the messagebox
@@ -102,8 +130,12 @@ def Mbox(
 
         reply = msgBox.exec_()
         if reply == QMessageBox.StandardButton.Yes:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "yes"
         if reply == QMessageBox.StandardButton.No:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "no"
     if style == 2:
         # Set the messagebox
@@ -119,8 +151,12 @@ def Mbox(
 
         reply = msgBox.exec_()
         if reply == QMessageBox.StandardButton.Ok:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "ok"
         if reply == QMessageBox.StandardButton.Cancel:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "cancel"
     if style == 20:
         Dialog = QInputDialog()
@@ -136,6 +172,8 @@ def Mbox(
         else:
             # user clicked Cancel
             replyText = reply[0]  # which will be "" if they clicked Cancel
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return str(replyText)
     if style == 21:
         Dialog = QInputDialog()
@@ -153,6 +191,8 @@ def Mbox(
         else:
             # user clicked Cancel
             replyText = ""
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return str(replyText)
     if style == 30:
         # Set the messagebox
@@ -164,6 +204,8 @@ def Mbox(
         msgBox.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Dialog)
 
         reply = msgBox.show()
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return
 
 
@@ -175,6 +217,9 @@ def RestartDialog(message="", includeIcons=False):
         otherwise returns 'no'
     """
     from PySide.QtWidgets import QMessageBox
+    
+    while QApplication.overrideCursor() is not None:
+        QApplication.restoreOverrideCursor()
 
     # Save the preferences before restarting
     App.saveParameter()
@@ -214,10 +259,14 @@ def RestartDialog(message="", includeIcons=False):
     reply = msgBox.exec_()
     if reply == QMessageBox.StandardButton.Cancel:
         msgBox.close()
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return "no"
     if reply == QMessageBox.StandardButton.Ok:
         restart_freecad()
         msgBox.close()
+        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return "yes"
     return
 

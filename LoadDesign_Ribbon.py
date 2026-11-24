@@ -863,9 +863,10 @@ class LoadDialog(Design_ui.Ui_Form, QObject):
         # Set the icon and size for the refresh button
         self.form.LoadWB.setIcon(Gui.getIcon("view-refresh"))
         self.form.LoadWB.setIconSize(QSize(20, 20))
-
+        
         # Restore the cursor
-        QApplication.restoreOverrideCursor()
+        while QApplication.overrideCursor() is not None:
+            QApplication.restoreOverrideCursor()
         return
 
     def on_ReloadWB_clicked(self, RestartFreeCAD=False):
