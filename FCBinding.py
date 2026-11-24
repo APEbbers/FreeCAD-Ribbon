@@ -2265,6 +2265,9 @@ class ModernMenu(RibbonBar):
         # Perfom the action depending on which button is clicked
         if action == "Start":                        
             if self.CustomizeEnabled is False:
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+                
                 # Install the patch for dragdrop under wayland
                 if len(self.findChildren(EventInspector_Patch_1)) == 0:
                     self.installEventFilter(EventInspector_Patch_1(mw))
@@ -2296,7 +2299,7 @@ class ModernMenu(RibbonBar):
                 if os.path.exists(DataFile) is True:
                     # Load the dialog
                     self.AddCommandsDialog  = None
-                    self.AddCommandsDialog = LoadAddCommands.LoadDialog(self)
+                    self.AddCommandsDialog = LoadAddCommands.LoadDialog()
                     if Parameters.DOCKED_DIALOGS is False:
                         # Show the form
                         self.AddCommandsDialog.form.show()
@@ -2314,8 +2317,14 @@ class ModernMenu(RibbonBar):
                         RibbonLayoutDock.customContextMenuRequested.connect(lambda pos: self.contextMenu_Panels_ToolBars(pos))
                         # Add the dockwidget
                         mw.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, RibbonLayoutDock, Qt.Orientation.Horizontal)
+                
+                while QApplication.overrideCursor() is not None:
+                    QApplication.restoreOverrideCursor()
                 return
             if self.CustomizeEnabled is True:
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+                
                 for category in self.CustomizedCategories:
                     self.setCurrentCategory(category)
                     self.on_Ok_Clicked()
@@ -2324,6 +2333,9 @@ class ModernMenu(RibbonBar):
                 self.CustomizedCategories.clear()
                 
                 self.removeEventFilter(self.findChild(EventInspector_Patch_1))
+                
+                while QApplication.overrideCursor() is not None:
+                    QApplication.restoreOverrideCursor()
                 return
 
         if action == "Cancel":
