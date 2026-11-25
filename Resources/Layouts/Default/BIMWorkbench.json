@@ -79,6 +79,12 @@
                             "text": "Toggle Grid",
                             "icon": "",
                             "IsExtra": true
+                        },
+                        "Working Planes_ddb": {
+                            "size": "large",
+                            "text": "Working Planes",
+                            "icon": "",
+                            "IsExtra": true
                         }
                     },
                     "order": [
@@ -95,6 +101,7 @@
                         "Draft_Fillet",
                         "12_separator_BIMWorkbench",
                         "Draft Snap_ddb",
+                        "Working Planes_ddb",
                         "Draft_ToggleGrid"
                     ],
                     "Enabled": true
@@ -893,7 +900,8 @@
                     "General Tools",
                     "Object Tools"
                 ]
-            }
+            },
+            "Enabled": true
         }
     },
     "dropdownButtons": {
@@ -1019,6 +1027,24 @@
             [
                 "Arch_PipeConnector",
                 "BIMWorkbench"
+            ]
+        ],
+        "Working Planes_ddb": [
+            [
+                "BIM_SetWPFront",
+                "BIMWorkbench"
+            ],
+            [
+                "BIM_SetWPSide",
+                "BIMWorkbench"
+            ],
+            [
+                "BIM_SetWPTop",
+                "BIMWorkbench"
+            ],
+            [
+                "Draft_SelectPlane",
+                "DraftWorkbench"
             ]
         ]
     },
