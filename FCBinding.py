@@ -106,7 +106,6 @@ from PySide.QtWidgets import (
     QCompleter,
     QTabWidget,
     QStyleOptionComplex,
-    
 )
 from PySide.QtCore import (
     Qt,
@@ -126,7 +125,7 @@ from PySide.QtCore import (
     QSignalBlocker,
     QMimeData,
     QEventLoop,    
-    QAbstractItemModel,      
+    QAbstractItemModel,
 )
 import CustomWidgets
 from CustomWidgets import (
@@ -1937,6 +1936,20 @@ class ModernMenu(RibbonBar):
                     title = translate("FreeCAD Ribbon", "Save and exit customize...")
                 CustomizeStartAct = self.contextMenu.addAction(title)
                 CustomizeStartAct.triggered.connect(lambda: self.handleContextMenuAction("Start"))
+                if self.CustomizeEnabled is False:
+                    ShortcutKey = "Alt+L"
+                    try:
+                        CustomShortCuts = App.ParamGet(
+                            "User parameter:BaseApp/Preferences/Shortcut"
+                        )
+                        if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
+                            ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
+                    except Exception:
+                        pass
+                    if ShortcutKey != "" and ShortcutKey is not None:
+                        CustomizeStartAct.setShortcut(ShortcutKey)
+                        self.LayoutMenuShortCut = ShortcutKey        
+                    
                 # Add a cancel button
                 CustomizeCancelAct = QAction()                 
                 CustomizeCancelAct = self.contextMenu.addAction(translate("FreeCAD Ribbon", "Cancel"))
@@ -2261,12 +2274,12 @@ class ModernMenu(RibbonBar):
     
     OkClicked = False
     CancelClicked = []
-    def handleContextMenuAction(self, action):  
+    def handleContextMenuAction(self, action):         
         # Perfom the action depending on which button is clicked
         if action == "Start":                        
             if self.CustomizeEnabled is False:
                 QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+                # QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
                 
                 # Install the patch for dragdrop under wayland
                 if len(self.findChildren(EventInspector_Patch_1)) == 0:
@@ -5272,8 +5285,10 @@ class ModernMenu(RibbonBar):
         # Add a beta button when showing the settings menu. 
         # Otherwise the button will be removed when using the context menus for the buttons
         def LoadBetaButton():
-            # Add a switch to enable beta functions            
-            switch = CheckBoxAction(self, "Enable béta functions")
+            # Add a switch to enable beta functions
+            switch = self.findChild(CheckBoxAction, "Enable béta functions")
+            if switch is None:    
+                switch = CheckBoxAction(self, "Enable béta functions")
             switch.setChecked(Parameters.BETA_FUNCTIONS_ENABLED)
             switch.setObjectName("bétaSwitch")
             toolTipText = (translate("FreeCAD Ribbon",
@@ -5298,7 +5313,7 @@ class ModernMenu(RibbonBar):
         """
         ))
             switch.setToolTip(toolTipText)
-            switch.checkStateChanged.connect(self.on_ToggleBetaFunctions_toggled)       
+            switch.checkStateChanged.connect(lambda e, x=switch: self.on_ToggleBetaFunctions_toggled(x, e))       
             if Parameters.BETA_FUNCTIONS_ENABLED is True:
                 self.BetaFunctionsEnabled = True
                 switch.setCheckState(Qt.CheckState.Checked)
@@ -5653,6 +5668,18 @@ class ModernMenu(RibbonBar):
             self.CustomizeRibbonButton.setObjectName("CustomizeRibbon")
             self.CustomizeRibbonButton.setToolTip(f'<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>')
             self.CustomizeRibbonButton.triggered.connect(lambda: self.handleContextMenuAction("Start"))
+            ShortcutKey = "Alt+L"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
+                    ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
+            except Exception:
+                pass
+            if ShortcutKey != "" and ShortcutKey is not None:
+                self.CustomizeRibbonButton.setShortcut(ShortcutKey)
+                self.LayoutMenuShortCut = ShortcutKey   
         
         # Add the ribbon design button (Legacy)
         self.DesignButton = self.SettingsMenu.addAction(translate("FreeCAD Ribbon", "Ribbon Layout"))
@@ -5661,20 +5688,21 @@ class ModernMenu(RibbonBar):
             self.DesignButton.setText(translate("FreeCAD Ribbon", "Ribbon Layout (Legacy)"))
         self.DesignButton.setToolTip(f'<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>(Legacy)')
         self.DesignButton.triggered.connect(self.loadDesignMenu)
-        ShortcutKey = "Alt+L"
-        try:
-            CustomShortCuts = App.ParamGet(
-                "User parameter:BaseApp/Preferences/Shortcut"
-            )
-            if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
-                ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
-        except Exception:
-            pass
-        if ShortcutKey != "" and ShortcutKey is not None:
-            self.DesignButton.setShortcut(ShortcutKey)
-            self.LayoutMenuShortCut = ShortcutKey
-            self.DesignButton.setToolTip(f'<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>({ShortcutKey})<br></br>(Legacy)')
-        
+        if not self.BetaFunctionsEnabled:
+            ShortcutKey = "Alt+L"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
+                    ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
+            except Exception:
+                pass
+            if ShortcutKey != "" and ShortcutKey is not None:
+                self.DesignButton.setShortcut(ShortcutKey)
+                self.LayoutMenuShortCut = ShortcutKey
+                self.DesignButton.setToolTip(f'<b>Ribbon layout menu</b><br></br><i>{translate("FreeCAD Ribbon", "Design the ribbon to your preference")}</i><br></br>({ShortcutKey})<br></br>(Legacy)')   
+            
         # Add the preference button
         PreferenceButton = self.SettingsMenu.addAction(
             translate("FreeCAD Ribbon", "Ribbon Preferences")
@@ -6355,7 +6383,7 @@ class ModernMenu(RibbonBar):
             ScrollButton.click()
         return
 
-    def on_ToggleBetaFunctions_toggled(self):
+    def on_ToggleBetaFunctions_toggled(self, switch, event):
         tooltip = self.DesignButton.toolTip()
         DesignButtonText = self.DesignButton.text()
         if Parameters.BETA_FUNCTIONS_ENABLED:    
@@ -6368,8 +6396,8 @@ class ModernMenu(RibbonBar):
             DesignButtonText = DesignButtonText.replace(" (Legacy)", "")
         self.DesignButton.setToolTip(tooltip)
         self.DesignButton.setText(DesignButtonText)
-        
-        if Parameters.BETA_FUNCTIONS_ENABLED is False:
+
+        if event == 2:
             # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", True)
             # print a message
@@ -6399,12 +6427,11 @@ class ModernMenu(RibbonBar):
                 DesignButtonText = DesignButtonText + " (Legacy)"
             self.DesignButton.setToolTip(tooltip)
             self.DesignButton.setText(DesignButtonText)
+            # Remove the shortcut
+            self.DesignButton.setShortcut("")
+            
             # Add the Ribbon Customize button if not present
             actions = self.SettingsMenu.actions()
-            # for action in actions:
-            #     if action.objectName() == "CustomizeRibbon":
-            #         return
-
             actionBefore = None
             for i in range(len(actions)):
                 action = actions[i]
@@ -6417,8 +6444,23 @@ class ModernMenu(RibbonBar):
                         self.CustomizeRibbonButton.setToolTip(f'<b>Customize ribbon</b><br></br><i>{translate("FreeCAD Ribbon", "Enter the customize environment")}</i><br></br>')
                         self.CustomizeRibbonButton.triggered.connect(lambda: self.handleContextMenuAction("Start"))
                         self.SettingsMenu.insertAction(action, self.CustomizeRibbonButton)
-                    return                    
-        if Parameters.BETA_FUNCTIONS_ENABLED is True:
+                        
+                        # Add a shortcut to the customizeButton
+                        ShortcutKey = "Alt+L"
+                        try:
+                            CustomShortCuts = App.ParamGet(
+                                "User parameter:BaseApp/Preferences/Shortcut"
+                            )
+                            if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
+                                ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
+                        except Exception:
+                            pass
+                        if ShortcutKey != "" and ShortcutKey is not None:
+                            self.CustomizeRibbonButton.setShortcut(ShortcutKey)
+                            self.LayoutMenuShortCut = ShortcutKey    
+            return                    
+
+        if event == 0:
             # Write the parameter
             Parameters_Ribbon.Settings.SetBoolSetting("BetaFunctions", False)
             # print a message
@@ -6431,6 +6473,19 @@ class ModernMenu(RibbonBar):
             DesignButtonText = DesignButtonText.replace(" (Legacy)", "")
             self.DesignButton.setToolTip(tooltip)
             self.DesignButton.setText(DesignButtonText)
+            # Add a shortcut to the designButton
+            ShortcutKey = "Alt+L"
+            try:
+                CustomShortCuts = App.ParamGet(
+                    "User parameter:BaseApp/Preferences/Shortcut"
+                )
+                if "Ribbon_Layout" in CustomShortCuts.GetStrings() and CustomShortCuts.GetString("Ribbon_Layout") != "":
+                    ShortcutKey = CustomShortCuts.GetString("Ribbon_Layout")
+            except Exception:
+                pass
+            if ShortcutKey != "" and ShortcutKey is not None:
+                self.DesignButton.setShortcut(ShortcutKey)
+                self.LayoutMenuShortCut = ShortcutKey    
             # Remove the Ribbon Customize button
             actions = self.SettingsMenu.actions()
             for action in actions:
@@ -9378,6 +9433,7 @@ class EventInspector_RibbonUI_1(QObject):
                 KeyModifier = ""
                 StoredShortCutKey_Pin = "Alt+T"
                 StoredShortCutKey_MenuBar = "Shift+M"
+                StoredShortCutKey_CustomiseMenu = RibbonBar.LayoutMenuShortCut
                 
                 # if modifiers are set, store its name
                 if event.modifiers():                
@@ -9406,8 +9462,8 @@ class EventInspector_RibbonUI_1(QObject):
                 # Check if the shortcut for the pin button matches the pressed key and modifier key.
                 # If so, use the pin function
                 if StoredShortCutKey_Pin.split("+")[0] in KeyModifier and len(StoredShortCutKey_Pin.split("+")) > 1 and StoredShortCutKey_Pin.split("+")[1] in Key:
-                            RibbonBar.on_Pin_clicked()
-                            return QObject.eventFilter(self, obj, event)
+                    RibbonBar.on_Pin_clicked()
+                    return QObject.eventFilter(self, obj, event)
                 else:
                     if StoredShortCutKey_Pin in Key:
                         RibbonBar.on_Pin_clicked()
@@ -9416,12 +9472,21 @@ class EventInspector_RibbonUI_1(QObject):
                 # Check if the shortcut for the menubar matches the pressed key and modifier key.
                 # If so, use the menubar function
                 if StoredShortCutKey_MenuBar.split("+")[0] in KeyModifier and len(StoredShortCutKey_MenuBar.split("+")) > 1 and StoredShortCutKey_MenuBar.split("+")[1] in Key:
-                            RibbonBar.ToggleMenuBar()
-                            return QObject.eventFilter(self, obj, event)
+                    RibbonBar.ToggleMenuBar()
+                    return QObject.eventFilter(self, obj, event)
                 else:
                     if StoredShortCutKey_MenuBar in Key:
                         RibbonBar.ToggleMenuBar()
                         return QObject.eventFilter(self, obj, event)
+                    
+                # # Check if the shortcut for the menubar matches the pressed key and modifier key.
+                # # If so, use the menubar function
+                # if StoredShortCutKey_CustomiseMenu.split("+")[0] in KeyModifier and len(StoredShortCutKey_CustomiseMenu.split("+")) > 1 and StoredShortCutKey_CustomiseMenu.split("+")[1] in Key:
+                #     RibbonBar.handleContextMenuAction("Start")
+                # else:
+                #     if StoredShortCutKey_CustomiseMenu in Key:
+                #         RibbonBar.handleContextMenuAction("Start")
+                #         return QObject.eventFilter(self, obj, event)
             except:  # noqa: E722
                 if Parameters.DEBUG_MODE:
                     StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
