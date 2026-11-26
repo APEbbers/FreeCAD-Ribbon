@@ -2142,6 +2142,14 @@ class ToggleAction(QWidgetAction):
     
     def setObjectName(self, objectName = ""):
         self.Toggle.setObjectName(objectName)
+        
+    def styleSheet(self):
+        return self.PlainTextEdit.styleSheet()
+    
+    def setStyleSheet(self, styleSheet):
+        self.Toggle.setStyleSheet(styleSheet)
+        self.label.setStyleSheet(styleSheet)
+        self.widget.setStyleSheet(styleSheet)
  
 class CheckBoxAction(QWidgetAction):
     checkbox = QCheckBox()        
@@ -2152,22 +2160,22 @@ class CheckBoxAction(QWidgetAction):
         layout_H = QHBoxLayout()
         layout_V = QVBoxLayout()
         self.widget = QWidget()
-        label = QLabel(text)
+        self.label = QLabel(text)
         Font = QFont()
         Font.setPixelSize(FontSize)
-        label.setFont(Font)
+        self.label.setFont(Font)
         
         # Text right from checkbox
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout_H.addWidget(self.checkbox)
-        layout_H.addWidget(label)
+        layout_H.addWidget(self.label)
         spacer = QWidget()
         spacer.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         layout_H.addWidget(spacer)
         
         # Text above checkbox
-        label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
-        layout_V.addWidget(label)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        layout_V.addWidget(self.label)
         layout_V.addWidget(self.checkbox)
         
         if TextPostion == "Right":
@@ -2204,6 +2212,15 @@ class CheckBoxAction(QWidgetAction):
     
     def setObjectName(self, objectName = ""):
         self.checkbox.setObjectName(objectName)
+        
+    def styleSheet(self):
+        return self.checkbox.styleSheet()
+    
+    def setStyleSheet(self, styleSheet):
+        self.checkbox.setStyleSheet(styleSheet)
+        self.label.setStyleSheet(styleSheet)
+        self.widget.setStyleSheet(styleSheet)
+        return
 
 class SpinBoxAction(QWidgetAction):
         
@@ -2452,6 +2469,8 @@ class LineEditAction(QWidgetAction):
     
     def setStyleSheet(self, styleSheet):
         self.lineEdit.setStyleSheet(styleSheet)
+        self.label.setStyleSheet(styleSheet)
+        self.widget.setStyleSheet(styleSheet)
         return
 
 class PlainTextEditAction(QWidgetAction):
@@ -2479,6 +2498,7 @@ class PlainTextEditAction(QWidgetAction):
         self.widget.setLayout(layout)
 
         self.setDefaultWidget(self.widget)
+        
         return
     
     def setLineWrapMode(self, mode: QPlainTextEdit.LineWrapMode):
@@ -2589,6 +2609,13 @@ class ButtonAction(QWidgetAction):
     def setObjectName(self, objectName = ""):
         self.ToolButton.setObjectName(objectName)
         return
+    
+    def styleSheet(self):
+        return self.ToolButton.styleSheet()
+    
+    def setStyleSheet(self, styleSheet):
+        self.ToolButton.setStyleSheet(styleSheet)
+        self.label.setStyleSheet(styleSheet)
     
 class StayOpenMenu(QMenu):
     """A menu that stays open until the user clicks outside of it

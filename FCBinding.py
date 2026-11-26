@@ -1715,7 +1715,7 @@ class ModernMenu(RibbonBar):
                         # Add a line edit for changing the text
                         ChangeButtonText = LineEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
                         ChangeButtonText.setFixedSize(200,21)
-                        ChangeButtonText.setClearButtonEnabled(False)
+                        ChangeButtonText.setClearButtonEnabled(False)  
                         
                         if widget.parent().ButtonStyle != RibbonButtonStyle.Small:
                             ChangeButtonText = PlainTextEditAction(self, translate("FreeCAD Ribbon", "Set button text"), Parameters.FONTSIZE_MENUS)
@@ -5405,7 +5405,12 @@ class ModernMenu(RibbonBar):
             else:
                 self.BetaFunctionsEnabled = False   
                 switch.setCheckState(Qt.CheckState.Unchecked)
-                switch.setChecked(False)            
+                switch.setChecked(False)    
+            switch.setStyleSheet("""
+                    text-align:left;
+                    background-color: none;
+                    padding-left: 12px;
+                    """)     
             
             # if present remove the old switch
             for action in self.SettingsMenu.actions():
