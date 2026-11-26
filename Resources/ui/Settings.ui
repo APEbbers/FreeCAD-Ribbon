@@ -220,14 +220,6 @@
           <bool>true</bool>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents_4">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>-646</y>
-            <width>718</width>
-            <height>1306</height>
-           </rect>
-          </property>
           <layout class="QGridLayout" name="gridLayout_44">
            <item row="1" column="0">
             <widget class="QGroupBox" name="groupBox">
@@ -1176,7 +1168,7 @@
                       </font>
                      </property>
                      <property name="text">
-                      <string>This will also set the icon size for the tabs</string>
+                      <string>This will also set the icon size for the tabs incase the tab style is set to icon only</string>
                      </property>
                      <property name="wordWrap">
                       <bool>true</bool>
@@ -1371,7 +1363,7 @@
                     <bool>true</bool>
                    </property>
                    <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+                    <set>Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
                    </property>
                   </widget>
                  </item>
@@ -1494,7 +1486,7 @@
                     <bool>true</bool>
                    </property>
                    <property name="alignment">
-                    <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+                    <set>Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
                    </property>
                   </widget>
                  </item>
@@ -1556,14 +1548,6 @@
           <bool>true</bool>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents_3">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>718</width>
-            <height>454</height>
-           </rect>
-          </property>
           <layout class="QGridLayout" name="gridLayout_43">
            <item row="0" column="0">
             <widget class="QGroupBox" name="groupBox_6">
@@ -1910,14 +1894,6 @@
           <bool>true</bool>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>718</width>
-            <height>774</height>
-           </rect>
-          </property>
           <layout class="QGridLayout" name="gridLayout_36">
            <item row="0" column="0">
             <widget class="QGroupBox" name="groupBox_8">
@@ -2666,14 +2642,6 @@
           <bool>true</bool>
          </property>
          <widget class="QWidget" name="scrollAreaWidgetContents_2">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>718</width>
-            <height>667</height>
-           </rect>
-          </property>
           <layout class="QGridLayout" name="gridLayout_28">
            <item row="2" column="0">
             <widget class="QGroupBox" name="groupBox_15">
@@ -3135,7 +3103,7 @@
                  <string>&lt;span style=&quot; font-size:8pt; font-weight:700; font-style:italic;&quot;&gt;Warning:&lt;/span&gt;&lt;br&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;When overlay is enabled by default, the ribbon is hidden until you open or create a document. Use &amp;quot;ctrl+N&amp;quot; (Linux, Windows) or &amp;quot;meta+N&amp;quot; (macOs) to create a new document.&lt;/span&gt;&lt;/p&gt;&lt;p&gt;&lt;span style=&quot; font-size:8pt; font-style:italic;&quot;&gt;The pin button does not work with FreeCAD's overlay function. Enabling this, replaces the pin button with a overlay button.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                 </property>
                 <property name="alignment">
-                 <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+                 <set>Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
                 </property>
                 <property name="wordWrap">
                  <bool>true</bool>
