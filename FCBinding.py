@@ -2030,17 +2030,14 @@ class ModernMenu(RibbonBar):
                 # Set the values for the icon sizes
                 DefaultSize = "small"
                 FirstCommandSize = "large"
-                            
-                # Adjust the icon sizes
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 36)
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 72)
-                Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", True)
-                # Disable text for buttons
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", True)
-                                        
+                
+                SettingsFile = json.load(os.path.join(pathLayouts, "Default", "Preferences.json"))
+                for key, value in SettingsFile.items():
+                    if type(value) is int:
+                        Parameters_Ribbon.Settings.SetIntSetting(key, value)
+                    if type(value) is bool:
+                        Parameters_Ribbon.Settings.SetBoolSetting(key, value)
+                        
             elif LayoutName == "LargeAndMedium":
                 # Write the layout to the parameters
                 Parameters_Ribbon.Settings.SetStringSetting("Layout", "LargeAndMedium")
@@ -2051,47 +2048,45 @@ class ModernMenu(RibbonBar):
                 DefaultSize = "medium"
                 FirstCommandSize = "large"
                 
-                # Disable text for buttons
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Large", False)
-                Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
-                # Adjust the icon sizes
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 24)
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Large", 48)
-                
+                SettingsFile = json.load(os.path.join(pathLayouts, "LargeAndMedium", "Preferences.json"))
+                for key, value in SettingsFile.items():
+                    if type(value) is int:
+                        Parameters_Ribbon.Settings.SetIntSetting(key, value)
+                    if type(value) is bool:
+                        Parameters_Ribbon.Settings.SetBoolSetting(key, value)
+                        
             elif LayoutName == "AllSmall":
                 # Write the layout to the parameters
                 Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllSmall")
                 # Get the directory with the files for the default layout
-                # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllSmall")
                 LayoutDir = os.path.join(pathLayouts, "AllSmall")
                 # Set the values for the icon sizes
                 DefaultSize = "small"
                 FirstCommandSize = "small"
                 
-                # Disable text for buttons
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Small", False)
-
-                # Adjust the icon sizes
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Small", 24)
+                SettingsFile = json.load(LayoutDir = os.path.join(pathLayouts, "AllSmall", "Preferences.json"))
+                for key, value in SettingsFile.items():
+                    if type(value) is int:
+                        Parameters_Ribbon.Settings.SetIntSetting(key, value)
+                    if type(value) is bool:
+                        Parameters_Ribbon.Settings.SetBoolSetting(key, value)
+                        
             elif LayoutName == "AllMedium":
                 # Write the layout to the parameters
                 Parameters_Ribbon.Settings.SetStringSetting("Layout", "AllMedium")
                 # Get the directory with the files for the default layout
-                # LayoutDir = os.path.join(ConfigDirectory, "Layouts", "AllMedium")
                 LayoutDir = os.path.join(pathLayouts, "AllMedium")
                 # Set the values for the icon sizes
                 DefaultSize = "medium"
                 FirstCommandSize = "medium"
                 
-                # Disable text for buttons
-                Parameters_Ribbon.Settings.SetBoolSetting("ShowIconText_Medium", False)
-
-                # Adjust the icon sizes
-                Parameters_Ribbon.Settings.SetBoolSetting("Link_IconSizes", False)
-                Parameters_Ribbon.Settings.SetIntSetting("IconSize_Medium", 30)
+                SettingsFile = json.load(LayoutDir = os.path.join(pathLayouts, "AllMedium", "Preferences.json"))
+                for key, value in SettingsFile.items():
+                    if type(value) is int:
+                        Parameters_Ribbon.Settings.SetIntSetting(key, value)
+                    if type(value) is bool:
+                        Parameters_Ribbon.Settings.SetBoolSetting(key, value)
+                        
             else:
                 if LayoutName != "":
                     # Write the layout to the parameters
@@ -2235,8 +2230,6 @@ class ModernMenu(RibbonBar):
             os.makedirs(os.path.join(UserLayoutDir, answer))
             # Create the separate files for each workbench
             for workbench in self.workBenchDict["workbenches"]:
-                # Define a file
-                workbenchFile = os.path.join(UserLayoutDir, answer, f"{workbench}.json")
                 # Fill the dict
                 workbenchDict = {}
                 Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["workbenches", workbench])
@@ -2245,6 +2238,8 @@ class ModernMenu(RibbonBar):
                 if "customToolbars" in self.workBenchDict and workbench in self.workBenchDict["customToolbars"]:
                     Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["customToolbars", workbench])
                     workbenchDict["customToolbars"][workbench].update(self.workBenchDict["customToolbars"][workbench])
+                # Define a file
+                workbenchFile = os.path.join(UserLayoutDir, answer, f"{workbench}.json")
                 # Writing to file
                 with open(workbenchFile, "w") as outfile:
                     if Parameters.DEBUG_MODE:
@@ -2269,7 +2264,27 @@ class ModernMenu(RibbonBar):
                 # Add the dict with the tabgroups
                 Standard_Functions_Ribbon.add_keys_nested_dict(generalDict, ["tabGroups"], endEmpty=True)
                 generalDict["tabGroups"] = self.workBenchDict["tabGroups"]
+            # Define a file
+            GeneralFile = os.path.join(UserLayoutDir, answer, "General.json")
+            # Writing to file
+            with open(GeneralFile, "w") as outfile:
+                json.dump(GeneralFile, outfile, indent=4)
                     
+            # Write the preferences file
+            preferencesDict = {}
+            preferencesDict["IconSize_Small"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Small")
+            preferencesDict["IconSize_Medium"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Medium")
+            preferencesDict["IconSize_Large"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large")
+            preferencesDict["IconSize_Large"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large")
+            preferencesDict["Link_IconSizes"] = Parameters_Ribbon.Settings.GetBoolSetting("Link_IconSizes")
+            preferencesDict["IconSize_Small"] = Parameters_Ribbon.Settings.GetBoolSetting("IconSize_Small")
+            preferencesDict["IconSize_Medium"] = Parameters_Ribbon.Settings.GetBoolSetting("IconSize_Medium")
+            preferencesDict["IconSize_Large"] = Parameters_Ribbon.Settings.GetBoolSetting("IconSize_Large")
+            # Define a file
+            PreferencesFile = os.path.join(UserLayoutDir, answer, "Preferences.json")
+            # Writing to file
+            with open(PreferencesFile, "w") as outfile:
+                json.dump(PreferencesFile, outfile, indent=4)
         return
     
     OkClicked = False
