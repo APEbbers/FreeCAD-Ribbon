@@ -2112,46 +2112,46 @@ class ModernMenu(RibbonBar):
                                 Parameters_Ribbon.Settings.SetBoolSetting(key, value)
 
 
-                # Go through the directory     
-                for root, dirs, files in os.walk(LayoutDir):
-                    for filename in files:
-                        # Open the file and store its contents in the workbenchdict
-                        with open(os.path.join(LayoutDir, filename), "r") as file:
-                            try:
-                                loadedDict = {}
-                                loadedDict.update(json.load(file))
-                                
-                                if "general" not in filename.lower():
-                                    # Get the workbench name and add it to the Workbench dict
-                                    WorkBenchName = filename.replace(".json", "")                            
-                                    if "workbenches" in loadedDict and WorkBenchName in loadedDict["workbenches"]:
-                                            WorkbenchDict["workbenches"][WorkBenchName] = loadedDict["workbenches"][WorkBenchName]
-                                    if "customToolbars" in loadedDict:
-                                        StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkBenchName], endEmpty=True)
-                                        WorkbenchDict["customToolbars"][WorkBenchName].update(loadedDict["customToolbars"][WorkBenchName])
-                                    if "newPanels" in loadedDict:
-                                        StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["newPanels", WorkBenchName], endEmpty=True)
-                                        WorkbenchDict["newPanels"][WorkBenchName].update(loadedDict["newPanels"][WorkBenchName])
-                                if "general" in filename.lower():      
-                                    # Add the list with ignored toolbars
-                                    if "ignoredToolbars" in loadedDict:
-                                        Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["ignoredToolbars"], default=[])
-                                        GeneralDict["ignoredToolbars"] = loadedDict["ignoredToolbars"]
-                                    # Add the list with icon only toolbars
-                                    if "iconOnlyToolbars" in loadedDict:
-                                        Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["iconOnlyToolbars"], default=[])
-                                        GeneralDict["iconOnlyToolbars"] = loadedDict["iconOnlyToolbars"]
-                                    # Add the list with the quickaccess commands
-                                    if "quickAccessCommands" in loadedDict:
-                                        Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["quickAccessCommands"], default=[])
-                                        GeneralDict["quickAccessCommands"] = loadedDict["quickAccessCommands"]
-                                    if "tabGroups" in loadedDict:
-                                        # Add the dict with the tabgroups
-                                        Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["tabGroups"], endEmpty=True)
-                                        GeneralDict["tabGroups"] = loadedDict["tabGroups"]
-                            except:
-                                if Parameters.DEBUG_MODE is True: 
-                                    StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
+            # Go through the directory     
+            for root, dirs, files in os.walk(LayoutDir):
+                for filename in files:
+                    # Open the file and store its contents in the workbenchdict
+                    with open(os.path.join(LayoutDir, filename), "r") as file:
+                        try:
+                            loadedDict = {}
+                            loadedDict.update(json.load(file))
+                            
+                            if "general" not in filename.lower():
+                                # Get the workbench name and add it to the Workbench dict
+                                WorkBenchName = filename.replace(".json", "")                            
+                                if "workbenches" in loadedDict and WorkBenchName in loadedDict["workbenches"]:
+                                        WorkbenchDict["workbenches"][WorkBenchName] = loadedDict["workbenches"][WorkBenchName]
+                                if "customToolbars" in loadedDict:
+                                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["customToolbars", WorkBenchName], endEmpty=True)
+                                    WorkbenchDict["customToolbars"][WorkBenchName].update(loadedDict["customToolbars"][WorkBenchName])
+                                if "newPanels" in loadedDict:
+                                    StandardFunctions.add_keys_nested_dict(WorkbenchDict, ["newPanels", WorkBenchName], endEmpty=True)
+                                    WorkbenchDict["newPanels"][WorkBenchName].update(loadedDict["newPanels"][WorkBenchName])
+                            if "general" in filename.lower():      
+                                # Add the list with ignored toolbars
+                                if "ignoredToolbars" in loadedDict:
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["ignoredToolbars"], default=[])
+                                    GeneralDict["ignoredToolbars"] = loadedDict["ignoredToolbars"]
+                                # Add the list with icon only toolbars
+                                if "iconOnlyToolbars" in loadedDict:
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["iconOnlyToolbars"], default=[])
+                                    GeneralDict["iconOnlyToolbars"] = loadedDict["iconOnlyToolbars"]
+                                # Add the list with the quickaccess commands
+                                if "quickAccessCommands" in loadedDict:
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["quickAccessCommands"], default=[])
+                                    GeneralDict["quickAccessCommands"] = loadedDict["quickAccessCommands"]
+                                if "tabGroups" in loadedDict:
+                                    # Add the dict with the tabgroups
+                                    Standard_Functions_Ribbon.add_keys_nested_dict(GeneralDict, ["tabGroups"], endEmpty=True)
+                                    GeneralDict["tabGroups"] = loadedDict["tabGroups"]
+                        except:
+                            if Parameters.DEBUG_MODE is True: 
+                                StandardFunctions.Print(f"Ribbon UI:\n{traceback.format_exc()}", "Warning")
             
             # Go through all the installed workbenches
             for WorkBenchName, Workbench in Gui.listWorkbenches().items():

@@ -1,9 +1,13 @@
 {
     "Link_IconSizes": false,
     "IconSize_Small": 24,
-    "IconSize_Medium": 36,
+    "IconSize_Medium": 30,
     "IconSize_Large": 48,
     "ShowIconText_Small": false,
     "ShowIconText_Medium": false,
-    "ShowIconText_Large": false
+    "ShowIconText_Large": true,
+    "FontSize_Menus": 11,
+    "FontSize_Buttons": 11,
+    "FontSize_Tabs": 14,
+    "FontSize_Panels": 11
 }
