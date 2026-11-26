@@ -126,6 +126,7 @@ from PySide.QtCore import (
     QMimeData,
     QEventLoop,    
     QAbstractItemModel,
+    QMargins,
 )
 import CustomWidgets
 from CustomWidgets import (
@@ -1852,9 +1853,43 @@ class ModernMenu(RibbonBar):
                     self.SetLayoutsMenu.addSeparator()
                     
                     for layout in userLayouts:
-                        act = self.SetLayoutsMenu.addAction(str(layout))
-                        act.triggered.connect(lambda: self.handleLayoutMenuAction(str(layout)))
-                        
+                        # Create a widgetAction with a layout containing two buttons
+                        widget_action = QWidgetAction(self.SetLayoutsMenu)
+                        buttonLayout = QHBoxLayout()
+                        # Create the first button for activating the layout
+                        button = QPushButton()
+                        button.setText(translate("FreeCAD Ribbon", layout))
+                        button.setStyleSheet("""QPushButton{
+                                             text-align:left;
+                                             background-color: none;
+                                             padding-left: 12px;}
+                                             QPushButton:!hover{
+                                             border: none;}
+                                             """)
+                        Font = QFont()
+                        Font.setPixelSize(Parameters.FONTSIZE_MENUS)
+                        button.setFont(Font)
+                        button.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+                        button.clicked.connect(lambda: self.handleLayoutMenuAction(str(layout)))
+                        # Create a delete button
+                        deleteButton = QToolButton()
+                        deleteButton.setObjectName(f"del_{layout}")
+                        pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Resources", "FreeCAD Icons", "edit_Cancel.svg"))
+                        icon = QIcon(pixmap)
+                        deleteButton.setIcon(icon)
+                        deleteButton.clicked.connect(lambda e, x=layout: self.RemoveUserLayout(x))
+                        # Add the two buttons to the layout
+                        buttonLayout.addWidget(button)
+                        buttonLayout.addWidget(deleteButton)
+                        buttonLayout.setContentsMargins(3,3,3,3)
+                        # Create a widget to set the layout on
+                        widget = QWidget()
+                        widget.setLayout(buttonLayout)
+                        widget.setStyleSheet("background-color: none")
+                        # Add the widget to the widget action and add the widgetAction to the men
+                        widget_action.setDefaultWidget(widget)                        
+                        self.SetLayoutsMenu.addAction(widget_action)
+
                 # Add a separator
                 self.contextMenu.addSeparator()
 
@@ -2222,8 +2257,8 @@ class ModernMenu(RibbonBar):
                     StandardFunctions.Print(f"Layout {LayoutName} is applied")
                 json.dump(self.ribbonStructure, outfile, indent=4)
                                 
-            # Restart FreeCAD
-            StandardFunctions.RestartDialog(includeIcons=True)
+        # Restart FreeCAD
+        StandardFunctions.RestartDialog(includeIcons=True)
         return
     
     def AddUserLayout(self):                
@@ -2306,6 +2341,19 @@ class ModernMenu(RibbonBar):
             # Writing to file
             with open(PreferencesFile, "w") as outfile:
                 json.dump(preferencesDict, outfile, indent=4)
+        return
+    
+    def RemoveUserLayout(self, LayoutName):
+        UserLayoutDir = os.path.join(ConfigDirectory, "UserLayouts", LayoutName)
+        if os.path.exists(UserLayoutDir) is False:
+            return
+        try:
+            shutil.rmtree(UserLayoutDir, ignore_errors=True)
+        except Exception:
+            if Parameters.DEBUG_MODE:
+                StandardFunctions.Print("RibbonUI: User layout not completly removed!", "Warning")
+        
+        self.contextMenu.close()
         return
     
     OkClicked = False
@@ -5378,10 +5426,7 @@ class ModernMenu(RibbonBar):
         RightToolbarWidth = (
             SearchBarWidth
             + 3 * (self.RightToolBarButtonSize + 16)
-            # + self.RightToolBarButtonSize
         )
-        # if Parameters.USE_FC_OVERLAY is True:
-        #     RightToolbarWidth = SearchBarWidth + 2 * (self.RightToolBarButtonSize + 16)
         self.rightToolBar().setMinimumWidth(RightToolbarWidth)
         self.setRightToolBarHeight(self.RibbonMinimalHeight)
         

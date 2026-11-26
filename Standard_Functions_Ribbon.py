@@ -91,8 +91,10 @@ def Mbox(
     from PySide.QtCore import Qt
     from PySide import QtWidgets
     
+    overrideCursor = False
     while QApplication.overrideCursor() is not None:
         QApplication.restoreOverrideCursor()
+        overrideCursor = True
 
     Icon = QMessageBox.Icon.Information
     if IconType == "NoIcon":
@@ -113,8 +115,9 @@ def Mbox(
         
         reply = msgBox.exec()
         if reply == QMessageBox.StandardButton.Ok:
-            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+            if overrideCursor:
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "ok"
     if style == 1:
         # Set the messagebox
@@ -130,12 +133,14 @@ def Mbox(
 
         reply = msgBox.exec_()
         if reply == QMessageBox.StandardButton.Yes:
-            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+            if overrideCursor:
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "yes"
         if reply == QMessageBox.StandardButton.No:
-            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+            if overrideCursor:
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "no"
     if style == 2:
         # Set the messagebox
@@ -151,12 +156,14 @@ def Mbox(
 
         reply = msgBox.exec_()
         if reply == QMessageBox.StandardButton.Ok:
-            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+            if overrideCursor:
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "ok"
         if reply == QMessageBox.StandardButton.Cancel:
-            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+            if overrideCursor:
+                QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+                QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
             return "cancel"
     if style == 20:
         Dialog = QInputDialog()
@@ -172,8 +179,9 @@ def Mbox(
         else:
             # user clicked Cancel
             replyText = reply[0]  # which will be "" if they clicked Cancel
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        if overrideCursor:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return str(replyText)
     if style == 21:
         Dialog = QInputDialog()
@@ -191,8 +199,9 @@ def Mbox(
         else:
             # user clicked Cancel
             replyText = ""
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        if overrideCursor:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return str(replyText)
     if style == 30:
         # Set the messagebox
@@ -204,8 +213,9 @@ def Mbox(
         msgBox.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Dialog)
 
         reply = msgBox.show()
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        if overrideCursor:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return
 
 
@@ -218,8 +228,10 @@ def RestartDialog(message="", includeIcons=False):
     """
     from PySide.QtWidgets import QMessageBox
     
+    overrideCursor = False
     while QApplication.overrideCursor() is not None:
         QApplication.restoreOverrideCursor()
+        overrideCursor = True
 
     # Save the preferences before restarting
     App.saveParameter()
@@ -236,6 +248,7 @@ def RestartDialog(message="", includeIcons=False):
     msgBox.setIcon(QMessageBox.Icon.Warning)
     msgBox.setText(message)
     msgBox.setWindowTitle("FreeCAD Ribbon")
+    
     # Set the buttons and default button
     msgBox.setStandardButtons(
         QMessageBox.StandardButton.Cancel | QMessageBox.StandardButton.Ok
@@ -259,14 +272,16 @@ def RestartDialog(message="", includeIcons=False):
     reply = msgBox.exec_()
     if reply == QMessageBox.StandardButton.Cancel:
         msgBox.close()
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        if overrideCursor:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return "no"
     if reply == QMessageBox.StandardButton.Ok:
         restart_freecad()
         msgBox.close()
-        QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
-        QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
+        if overrideCursor:
+            QApplication.setOverrideCursor(Qt.CursorShape.WaitCursor)
+            QApplication.processEvents(QEventLoop.ProcessEventsFlag.AllEvents)
         return "yes"
     return
 
@@ -280,7 +295,6 @@ def restart_freecad():
         QtCore.QProcess.startDetached(
             QtWidgets.QApplication.applicationFilePath(), args
         )
-
     return
 
 
