@@ -4179,7 +4179,7 @@ class ModernMenu(RibbonBar):
 
                     for panelName, panel in currentCategory.panels().items():
                         # If the panelName is equal to the panel name on which the command is dropped, continue.                    
-                        if panelName == self.dropPanelName and panel not in self.RemovedPanels:
+                        if self.dropPanelName != "" and panelName != "" and panelName == self.dropPanelName and panel not in self.RemovedPanels:
                             # Get the command to be added
                             ExtraCommand = widget.currentItem().data(Qt.ItemDataRole.UserRole)
                             # If the command is part of a dropdown, get the actual command name
