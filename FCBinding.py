@@ -2293,11 +2293,14 @@ class ModernMenu(RibbonBar):
             preferencesDict["IconSize_Small"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Small")
             preferencesDict["IconSize_Medium"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Medium")
             preferencesDict["IconSize_Large"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large")
-            preferencesDict["IconSize_Large"] = Parameters_Ribbon.Settings.GetIntSetting("IconSize_Large")
             preferencesDict["Link_IconSizes"] = Parameters_Ribbon.Settings.GetBoolSetting("Link_IconSizes")
-            preferencesDict["IconSize_Small"] = Parameters_Ribbon.Settings.GetBoolSetting("IconSize_Small")
-            preferencesDict["IconSize_Medium"] = Parameters_Ribbon.Settings.GetBoolSetting("IconSize_Medium")
-            preferencesDict["IconSize_Large"] = Parameters_Ribbon.Settings.GetBoolSetting("IconSize_Large")
+            preferencesDict["ShowIconText_Small"] = Parameters_Ribbon.Settings.GetBoolSetting("ShowIconText_Small")
+            preferencesDict["ShowIconText_Medium"] = Parameters_Ribbon.Settings.GetBoolSetting("ShowIconText_Medium")
+            preferencesDict["ShowIconText_Large"] = Parameters_Ribbon.Settings.GetBoolSetting("ShowIconText_Large")
+            preferencesDict["FontSize_Menus"] = Parameters_Ribbon.Settings.GetIntSetting("FontSize_Menus")
+            preferencesDict["FontSize_Buttons"] = Parameters_Ribbon.Settings.GetIntSetting("FontSize_Buttons")
+            preferencesDict["FontSize_Tabs"] = Parameters_Ribbon.Settings.GetIntSetting("FontSize_Tabs")
+            preferencesDict["FontSize_Panels"] = Parameters_Ribbon.Settings.GetIntSetting("FontSize_Panels")
             # Define a file
             PreferencesFile = os.path.join(UserLayoutDir, answer, "Preferences.json")
             # Writing to file
