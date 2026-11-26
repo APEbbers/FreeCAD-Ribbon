@@ -2103,7 +2103,7 @@ class ModernMenu(RibbonBar):
                     LayoutDir = os.path.join(ConfigDirectory, "UserLayouts", LayoutName)
                     
                     SettingsFile = {}
-                    with open(os.path.join(ConfigDirectory, "UserLayouts", "Preferences.json"), "r") as file:
+                    with open(os.path.join(ConfigDirectory, "UserLayouts",  LayoutName, "Preferences.json"), "r") as file:
                         SettingsFile = json.load(file)
                         for key, value in SettingsFile.items():
                             if type(value) is int:
@@ -2286,7 +2286,7 @@ class ModernMenu(RibbonBar):
             GeneralFile = os.path.join(UserLayoutDir, answer, "General.json")
             # Writing to file
             with open(GeneralFile, "w") as outfile:
-                json.dump(GeneralFile, outfile, indent=4)
+                json.dump(generalDict, outfile, indent=4)
                     
             # Write the preferences file
             preferencesDict = {}
@@ -2302,7 +2302,7 @@ class ModernMenu(RibbonBar):
             PreferencesFile = os.path.join(UserLayoutDir, answer, "Preferences.json")
             # Writing to file
             with open(PreferencesFile, "w") as outfile:
-                json.dump(PreferencesFile, outfile, indent=4)
+                json.dump(preferencesDict, outfile, indent=4)
         return
     
     OkClicked = False
