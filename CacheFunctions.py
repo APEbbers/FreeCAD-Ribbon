@@ -134,7 +134,6 @@ def CreateCache(RestartFreeCAD=False):
 
     # Load the workbenches
     loadAllWorkbenches(
-        AutoHide=False,
         FinishMessage=translate(
             "FreeCAD Ribbon", "Ribbon UI: Data file is created."
         ),
