@@ -1708,6 +1708,20 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Style.combobox.addItem("Medium")
                         RibbonButtonAction_Style.combobox.addItem("Large")
                         RibbonButtonAction_Style.setObjectName("ButtonStyle")
+                        StyleSheet = ("""QLabel {
+                                background-color: none;
+                                margin: 0px;
+                                spacing: 0px;
+                            }               
+                            QComboBox {
+                                padding-left: 6px;
+                            }             
+                            QComboBox QAbstractItemView {
+                                background-color: none
+                            }
+                            """
+                        )
+                        RibbonButtonAction_Style.setStyleSheet(mw.styleSheet() + StyleSheet)
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Small:
                             RibbonButtonAction_Style.setCurrentText("Small")
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Medium:
@@ -5242,11 +5256,15 @@ class ModernMenu(RibbonBar):
         self.ComboBox.addItem("All")        
         self.ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
         self.ComboBox.setStyleSheet("""QToolTip {
-                    background-color: #FFFFE1;
-                    color: black;
-                    border: black solid 1px;
-                    border-radius: 2px;
-                    }"""
+                        background-color: #FFFFE1;
+                        color: black;
+                        border: black solid 1px;
+                        border-radius: 2px;
+                    }
+                    QComboBox {
+                        padding-left: 6px;
+                    }             
+                    """
                 )   
         # Adjust the font size to the toolbar height    
         Font = QFont()
@@ -5512,7 +5530,7 @@ class ModernMenu(RibbonBar):
                 sea.enterEvent = lambda e: SearchBar_EnterEvent(e)
                 
                 # Set the size
-                sea.setFixedSize(width, self.RightToolBarButtonSize-6)
+                sea.setFixedSize(width, self.RightToolBarButtonSize)
                 
                 # Add it to the right toolbar
                 BeforeAction = self.rightToolBar().actions()[1]

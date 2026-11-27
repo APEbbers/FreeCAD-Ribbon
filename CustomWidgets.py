@@ -2061,7 +2061,6 @@ class AnimatedToggle(Toggle):
 
 class ToggleAction(QWidgetAction):
     Toggle = Toggle()
-    Toggle.setContentsMargins(3,0,3,0)
         
     checkStateChanged = Toggle.stateChanged
     checkState = Toggle.checkState()
@@ -2086,12 +2085,14 @@ class ToggleAction(QWidgetAction):
         layout_H.addWidget(self.Toggle)
         layout_H.addWidget(self.label)
         layout_H.setSpacing(0)
+        layout_H.setContentsMargins(3,0,3,0)
 
         # Text above checkbox
         self.label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
         layout_V.addWidget(self.label)
         layout_V.addWidget(self.Toggle)
         layout_V.setSpacing(0)
+        layout_V.setContentsMargins(3,0,3,0)
 
         if TextPostion == "Right":
             self.widget.setLayout(layout_H)
@@ -2355,6 +2356,8 @@ class ComboBoxAction(QWidgetAction):
                 + 16
                 )
         
+        layout.setSpacing(0)
+        layout.setContentsMargins(3,0,3,0)
         self.widget.setLayout(layout)
 
         self.setDefaultWidget(self.widget)
@@ -2426,7 +2429,7 @@ class ComboBoxAction(QWidgetAction):
         self.combobox.setObjectName(objectName)
         
     def styleSheet(self):
-        return self.lineEdit.styleSheet()
+        return self.combobox.styleSheet()
     
     def setStyleSheet(self, styleSheet):
         self.combobox.setStyleSheet(styleSheet)
@@ -2458,6 +2461,7 @@ class LineEditAction(QWidgetAction):
         self.label.setFont(Font)
         self.label.setFixedHeight(self.label.fontMetrics().height())
         
+        layout.setContentsMargins(3,0,3,0)
         layout.addWidget(self.label)        
         layout.addWidget(self.lineEdit)
         self.widget.setLayout(layout)
@@ -2531,6 +2535,8 @@ class PlainTextEditAction(QWidgetAction):
         self.label.setFont(Font)
         self.label.setFixedHeight(self.label.fontMetrics().height())
         
+        # layout.setSpacing(0)
+        layout.setContentsMargins(3,0,3,0)
         layout.addWidget(self.label)        
         layout.addWidget(self.PlainTextEdit)
         self.widget.setLayout(layout)
