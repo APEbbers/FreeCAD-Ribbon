@@ -27,7 +27,7 @@ from pathlib import Path
 import subprocess
 import traceback
 
-from PySide.QtGui import (
+from PySide6.QtGui import (
     QDragEnterEvent,
     QDragLeaveEvent,
     QDragMoveEvent,
@@ -59,7 +59,7 @@ from PySide.QtGui import (
     QStandardItemModel,
     QStandardItem,
     )
-from PySide.QtWidgets import (
+from PySide6.QtWidgets import (
     QCheckBox,
     QFrame,
     QLineEdit,
@@ -107,7 +107,7 @@ from PySide.QtWidgets import (
     QTabWidget,
     QStyleOptionComplex,
 )
-from PySide.QtCore import (
+from PySide6.QtCore import (
     Qt,
     QTimer,
     Signal,
@@ -1683,6 +1683,13 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Text.setObjectName("ShowButtonText")
                         RibbonButtonAction_Text.setChecked(textVisible)
                         RibbonButtonAction_Text.setText(translate("FreeCAD Ribbon", "Show button text"))
+                        StyleSheet = ("""
+                            background-color: none;
+                            margin: 0px;
+                            spacing: 0px;
+                            """
+                        )
+                        RibbonButtonAction_Text.setStyleSheet(StyleSheet)
                         # Set the checkbox action checked or unchecked
                         RibbonButtonAction_Text.setChecked(textVisible)
                         if textVisible is True:
@@ -1701,14 +1708,13 @@ class ModernMenu(RibbonBar):
                         RibbonButtonAction_Style.combobox.addItem("Medium")
                         RibbonButtonAction_Style.combobox.addItem("Large")
                         RibbonButtonAction_Style.setObjectName("ButtonStyle")
-
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Small:
                             RibbonButtonAction_Style.setCurrentText("Small")
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Medium:
                             RibbonButtonAction_Style.setCurrentText("Medium")
                         if widget.parent().ButtonStyle == RibbonButtonStyle.Large:
                             RibbonButtonAction_Style.setCurrentText("Large")
-                        RibbonButtonAction_Style.setFixedWidth(82)
+                        RibbonButtonAction_Style.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
                         RibbonButtonAction_Style.currentTextChanged.connect(lambda: self.on_ButtonStyle_Clicked(panel, widget, RibbonButtonAction_Style))                      
                         self.contextMenu.addAction(RibbonButtonAction_Style)
                         
@@ -1722,12 +1728,19 @@ class ModernMenu(RibbonBar):
                             width = (Parameters.FONTSIZE_BUTTONS/widget.font().pointSize())*widget.width() + 10
                             ChangeButtonText.setFixedSize(width,42)
                             ChangeButtonText.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-                        StyleSheet = (
+                        StyleSheet_Text = (
                             """background: """
                             + "white;"
                             + "color: black;"
                             # + f"font-size: {Parameters.FONTSIZE_BUTTONS}px"
                             + """;"""
+                        )
+                        ChangeButtonText.setStyleSheet_Text(StyleSheet_Text)
+                        StyleSheet = ("""
+                            background-color: none;
+                            margin: 0px;
+                            spacing: 0px;
+                            """
                         )
                         ChangeButtonText.setStyleSheet(StyleSheet)
                         ChangeButtonText.setObjectName("SetButtonText")                        
@@ -1764,13 +1777,13 @@ class ModernMenu(RibbonBar):
                 panel = titleWidget.parent().parent()
                 ChangePanelTitle = CustomWidgets.LineEditAction(self, translate("FreeCAD Ribbon", "Change panel title"))
                 ChangePanelTitle.setObjectName("SetPanelTitle")
-                StyleSheet = (
+                StyleSheet_Text = (
                     """background: """
                     + "white;"
                     + "color: black"
                     + """;"""
                 )
-                ChangePanelTitle.setStyleSheet(StyleSheet)
+                ChangePanelTitle.setStyleSheet(StyleSheet_Text)
                 ChangePanelTitle.setText("")
                 ChangePanelTitle.setPlaceholderText(panel.title())
                 ChangePanelTitle.setClearButtonEnabled(True)
