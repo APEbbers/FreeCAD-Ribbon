@@ -2310,7 +2310,8 @@ class ComboBoxAction(QWidgetAction):
     def __init__(self, parent, text, TextPostion = "Right", FontSize = 12, EnableConfirmButton = False, ButtonText = "Add"):
         super().__init__(parent)
         self.TextPostion = TextPostion
-        self.combobox.setFixedHeight(20)
+        self.combobox.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.combobox.setFixedHeight(24)
         
         self.confirmButton.setText(ButtonText)
         self.confirmButton.setVisible(EnableConfirmButton)
@@ -2336,6 +2337,9 @@ class ComboBoxAction(QWidgetAction):
             layout.addWidget(self.combobox, 1, 0, 1, 1)
             layout.addWidget(self.confirmButton, 0, 2, 1, 1)
             layout.addWidget(self.label, 0, 3, 1, 1)
+            
+            # Adjust the size of the label to the widget
+            self.widget.setFixedHeight(max(self.combobox.height(), self.label.height()))
                     
          # Text above checkbox
         if TextPostion == "Top":
@@ -2343,9 +2347,13 @@ class ComboBoxAction(QWidgetAction):
             layout.addWidget(self.combobox, 1, 0, 1, 1)
             layout.addWidget(self.confirmButton, 1, 1, 1, 1)
    
-        # Adjust the size of the label to the widget
-        self.label.adjustSize()
-        self.widget.setFixedHeight(self.combobox.height() + self.label.height()+12)
+            # Adjust the size of the label to the widget
+            
+            self.widget.setFixedHeight(
+                self.combobox.height() 
+                + self.label.height() 
+                + 16
+                )
         
         self.widget.setLayout(layout)
 

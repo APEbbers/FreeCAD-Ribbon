@@ -5238,8 +5238,7 @@ class ModernMenu(RibbonBar):
         # Add controls for the tabgroup function
         self.ComboBox = QComboBox(self.rightToolBar())
         self.ComboBox.setObjectName("GroupBox")
-        self.ComboBox.setFixedWidth(100)
-        self.ComboBox.setFixedHeight(self.RightToolBarButtonSize)
+        self.ComboBox.setFixedWidth(150)
         self.ComboBox.addItem("All")        
         self.ComboBox.setToolTip(translate("FreeCAD Ribbon", "Select a tab group"))
         self.ComboBox.setStyleSheet("""QToolTip {
@@ -5253,7 +5252,8 @@ class ModernMenu(RibbonBar):
         Font = QFont()
         Font.setPixelSize(self.RightToolBarButtonSize *0.5)
         self.ComboBox.setFont(Font)
-        self.ComboBox.setFixedHeight(self.RightToolBarButtonSize-6)
+        self.ComboBox.setFixedHeight(self.RightToolBarButtonSize)
+        self.ComboBox.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.ComboBox.currentTextChanged.connect(lambda: self.on_Group_Changed(self.ComboBox.currentText( )))
         if "tabGroups" in self.ribbonStructure:
             for group in self.ribbonStructure["tabGroups"].keys():
@@ -5455,7 +5455,7 @@ class ModernMenu(RibbonBar):
         self.rightToolBar().setSizeIncrement(1, 1)
         # Set the objectName for the right toolbar. needed for excluding from hiding.
         self.rightToolBar().setObjectName("rightToolBar")
-        self.rightToolBar().setFixedHeight(self.RightToolBarButtonSize)
+        self.rightToolBar().setFixedHeight(self.RightToolBarButtonSize+3)
         return
 
     # Add the searchBar if it is present
