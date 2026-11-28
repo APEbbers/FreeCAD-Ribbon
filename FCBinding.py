@@ -84,6 +84,7 @@ from PySide6.QtWidgets import (
     QStyle,
     QProxyStyle,
     QStyleOptionButton,
+    QStyleOptionComboBox,
     QPushButton,
     QHBoxLayout,
     QLabel,
@@ -1835,6 +1836,7 @@ class ModernMenu(RibbonBar):
                 ):                
                 # Add a menu to select layout (themes)                
                 self.SetLayoutsMenu = self.contextMenu.addMenu(translate("FreeCAD Ribbon", "Set layouts..."))
+                self.SetLayoutsMenu.setToolTipsVisible(True)
                 
                 # Add a label to indicate the standard layout section
                 label = QLabel(translate("FreeCAD Ribbon", "Standard layouts"))
@@ -1848,15 +1850,57 @@ class ModernMenu(RibbonBar):
                 self.SetLayoutsMenu.addSeparator()
 
                 Default_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Default layout"))
+                with open(os.path.join(pathLayouts, "Default", "Preferences.json"), "r") as file:
+                    SettingsFile = json.load(file)
+                    Default_Act.setToolTip(
+                    "<b>Default layout</b><br></br>"
+                    + "Applies a layout with large, medium and small buttons.<br></br>"
+                    + "Text is standard enabled for large buttons."
+                    + f"<p>Button sizes:<br></br>"
+                    + f"&nbsp; Large: {SettingsFile["IconSize_Large"]}, medium: {SettingsFile["IconSize_Medium"]}, small: {SettingsFile["IconSize_Small"]}<br></br>"
+                    + f"Text sizes:<br></br>"
+                    + f"&nbsp; Menu: {SettingsFile["FontSize_Menus"]}, buttons: {SettingsFile["FontSize_Buttons"]}, tabs: {SettingsFile["FontSize_Tabs"]}, panels: {SettingsFile["FontSize_Panels"]}</p>"
+                    )
                 Default_Act.triggered.connect(lambda: self.handleLayoutMenuAction("Default"))
                 
                 LargeAndMedium_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "Large and medium buttons"))
+                with open(os.path.join(pathLayouts, "LargeAndMedium", "Preferences.json"), "r") as file:
+                    SettingsFile = json.load(file)
+                    LargeAndMedium_Act.setToolTip(
+                    "<b>Default layout</b><br></br>"
+                    + "Applies a layout with large and medium buttons.<br></br>"
+                    + "Text is standard enabled for large buttons."
+                    + f"<p>Button sizes:<br></br>"
+                    + f"&nbsp; Large: {SettingsFile["IconSize_Large"]}, medium: {SettingsFile["IconSize_Medium"]}<br></br>"
+                    + f"Text sizes:<br></br>"
+                    + f"&nbsp; Menu: {SettingsFile["FontSize_Menus"]}, buttons: {SettingsFile["FontSize_Buttons"]}, tabs: {SettingsFile["FontSize_Tabs"]}, panels: {SettingsFile["FontSize_Panels"]}</p>"
+                    )
                 LargeAndMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("LargeAndMedium"))
                 
                 AllSmall_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All small"))
+                with open(os.path.join(pathLayouts, "AllSmall", "Preferences.json"), "r") as file:
+                    SettingsFile = json.load(file)
+                    AllSmall_Act.setToolTip(
+                    "<b>Default layout</b><br></br>"
+                    + "Applies a layout with only small buttons.<br></br>"
+                    + "Text is standard disabled."
+                    + f"<p>Button size: {SettingsFile["IconSize_Small"]}<br></br>"
+                    + f"Text sizes:<br></br>"
+                    + f"&nbsp; Menu: {SettingsFile["FontSize_Menus"]}, buttons: {SettingsFile["FontSize_Buttons"]}, tabs: {SettingsFile["FontSize_Tabs"]}, panels: {SettingsFile["FontSize_Panels"]}</p>"
+                    )
                 AllSmall_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllSmall"))
                 
                 AllMedium_Act = self.SetLayoutsMenu.addAction(translate("FreeCAD Ribbon", "All medium"))
+                with open(os.path.join(pathLayouts, "AllMedium", "Preferences.json"), "r") as file:
+                    SettingsFile = json.load(file)
+                    AllMedium_Act.setToolTip(
+                    "<b>Default layout</b><br></br>"
+                    + "Applies a layout with only medium buttons.<br></br>"
+                    + "Text is standard disabled."
+                    + f"<p>Button size: {SettingsFile["IconSize_Medium"]}<br></br>"
+                    + f"Text sizes:<br></br>"
+                    + f"&nbsp; Menu: {SettingsFile["FontSize_Menus"]}, buttons: {SettingsFile["FontSize_Buttons"]}, tabs: {SettingsFile["FontSize_Tabs"]}, panels: {SettingsFile["FontSize_Panels"]}</p>"
+                    )
                 AllMedium_Act.triggered.connect(lambda: self.handleLayoutMenuAction("AllMedium"))
                 
                 # Add any user defined layout to the menu
@@ -1869,7 +1913,7 @@ class ModernMenu(RibbonBar):
                 if len(userLayouts) > 0:
                     # Add a label to indicate the user layout section
                     self.SetLayoutsMenu.addSeparator().setVisible(False)
-                    label = QLabel(translate("FreeCAD Ribbon", "Custom layouts"))
+                    label = QLabel(translate("FreeCAD Ribbon", "User layouts"))
                     label.setAlignment(Qt.AlignmentFlag.AlignLeading)
                     label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
                     label.setStyleSheet("QLabel {font-weight: bold; padding: 4px;}")
@@ -2312,11 +2356,11 @@ class ModernMenu(RibbonBar):
             for workbench in self.workBenchDict["workbenches"]:
                 # Fill the dict
                 workbenchDict = {}
-                Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["workbenches", workbench])
+                Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["workbenches", workbench], endEmpty=True)
                 workbenchDict["workbenches"][workbench] = self.workBenchDict["workbenches"][workbench]
                 # If the workbench has a custom toolbar, add its dict as well
                 if "customToolbars" in self.workBenchDict and workbench in self.workBenchDict["customToolbars"]:
-                    Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["customToolbars", workbench])
+                    Standard_Functions_Ribbon.add_keys_nested_dict(workbenchDict, ["customToolbars", workbench], endEmpty=True)
                     workbenchDict["customToolbars"][workbench].update(self.workBenchDict["customToolbars"][workbench])
                 # Define a file
                 workbenchFile = os.path.join(UserLayoutDir, answer, f"{workbench}.json")
@@ -5263,9 +5307,9 @@ class ModernMenu(RibbonBar):
                     }
                     QComboBox {
                         padding-left: 6px;
-                    }             
+                    }       
                     """
-                )   
+                )
         # Adjust the font size to the toolbar height    
         Font = QFont()
         Font.setPixelSize(self.RightToolBarButtonSize *0.5)
@@ -5740,6 +5784,9 @@ class ModernMenu(RibbonBar):
 
     # Function to create the extra menus on the right toolbar
     def CreateMenus(self):
+        self.SettingsMenu.setToolTipsVisible(True)
+        self.HelpMenu.setToolTipsVisible(True)
+        
         CustomizeIcon = QIcon()
         PreferencesIcon = QIcon()
         # Get the freecad preference button
@@ -5865,7 +5912,8 @@ class ModernMenu(RibbonBar):
             ListScripts = os.listdir(ScriptDir)
             if len(ListScripts) > 0:
                 ScriptButtonMenu = self.SettingsMenu.addMenu(translate("FreeCAD Ribbon", "Ribbon Scripts..."))
-                ScriptButtonMenu.setToolTip(translate("FreeCAD Ribbon", "<b>Ribbon Scripts</b><br></br><i>Scripts to help setup the ribbon.</i><br></br>"))
+                # ScriptButtonMenu.setToolTip(translate("FreeCAD Ribbon", "<b>Ribbon Scripts</b><br></br><i>Scripts to help setup the ribbon.</i><br></br>"))
+                ScriptButtonMenu.setToolTipsVisible(True)
                 for i in range(len(ListScripts)):
                     ScriptButtonMenu.addAction(
                         ListScripts[i],
